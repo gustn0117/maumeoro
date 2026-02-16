@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getReviews, getReviewsByProduct, getReviewsByUser, addReview, saveReviews } from '@/lib/data'
+import { getReviews, getReviewsByProduct, getReviewsByUser, addReview, deleteReview } from '@/lib/data'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -8,19 +8,19 @@ export async function GET(request: Request) {
 
   let reviews
   if (productId) {
-    reviews = getReviewsByProduct(productId)
+    reviews = await getReviewsByProduct(productId)
   } else if (userId) {
-    reviews = getReviewsByUser(userId)
+    reviews = await getReviewsByUser(userId)
   } else {
-    reviews = getReviews()
+    reviews = await getReviews()
   }
 
-  return NextResponse.json(reviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
+  return NextResponse.json(reviews)
 }
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const review = addReview({
+  const review = await addReview({
     productId: body.productId,
     userId: body.userId,
     userName: body.userName,
@@ -34,8 +34,6 @@ export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url)
   const id = searchParams.get('id')
   if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 })
-  let reviews = getReviews()
-  reviews = reviews.filter((r) => r.id !== id)
-  saveReviews(reviews)
+  await deleteReview(id)
   return NextResponse.json({ success: true })
 }

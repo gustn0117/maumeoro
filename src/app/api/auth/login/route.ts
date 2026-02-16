@@ -11,7 +11,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '이메일과 비밀번호를 입력해 주세요.' }, { status: 400 })
     }
 
-    const user = getUserByEmail(email)
+    const user = await getUserByEmail(email)
     if (!user) {
       return NextResponse.json({ error: '이메일 또는 비밀번호가 일치하지 않습니다.' }, { status: 401 })
     }

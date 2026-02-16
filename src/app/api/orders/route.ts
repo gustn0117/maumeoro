@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server'
-import { getOrders, addOrder, saveOrders } from '@/lib/data'
+import { getOrders, addOrder, updateOrder } from '@/lib/data'
 
 export async function GET() {
-  const orders = getOrders()
-  return NextResponse.json(orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
+  const orders = await getOrders()
+  return NextResponse.json(orders)
 }
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const order = addOrder({
+  const order = await addOrder({
     items: body.items,
     customer: body.customer,
     status: 'pending',
@@ -20,10 +20,10 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const body = await request.json()
-  const orders = getOrders()
-  const index = orders.findIndex((o) => o.id === body.id)
-  if (index === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  orders[index] = { ...orders[index], ...body }
-  saveOrders(orders)
-  return NextResponse.json(orders[index])
+  try {
+    const updated = await updateOrder(body.id, body)
+    return NextResponse.json(updated)
+  } catch {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
 }

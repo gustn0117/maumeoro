@@ -15,14 +15,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '비밀번호는 6자 이상이어야 합니다.' }, { status: 400 })
     }
 
-    const existing = getUserByEmail(email)
+    const existing = await getUserByEmail(email)
     if (existing) {
       return NextResponse.json({ error: '이미 가입된 이메일입니다.' }, { status: 409 })
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user = addUser({
+    const user = await addUser({
       email,
       password: hashedPassword,
       name,

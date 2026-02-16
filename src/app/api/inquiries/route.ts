@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getInquiries, getInquiriesByUser, addInquiry, saveInquiries } from '@/lib/data'
+import { getInquiries, getInquiriesByUser, addInquiry, updateInquiry, deleteInquiry } from '@/lib/data'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -7,17 +7,17 @@ export async function GET(request: Request) {
 
   let inquiries
   if (userId) {
-    inquiries = getInquiriesByUser(userId)
+    inquiries = await getInquiriesByUser(userId)
   } else {
-    inquiries = getInquiries()
+    inquiries = await getInquiries()
   }
 
-  return NextResponse.json(inquiries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()))
+  return NextResponse.json(inquiries)
 }
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const inquiry = addInquiry({
+  const inquiry = await addInquiry({
     userId: body.userId,
     userName: body.userName,
     title: body.title,
@@ -29,25 +29,18 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const body = await request.json()
-  const inquiries = getInquiries()
-  const index = inquiries.findIndex((i) => i.id === body.id)
-  if (index === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  inquiries[index] = {
-    ...inquiries[index],
-    reply: body.reply,
-    repliedAt: new Date().toISOString(),
-    status: 'replied',
+  try {
+    const updated = await updateInquiry(body.id, { reply: body.reply })
+    return NextResponse.json(updated)
+  } catch {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
-  saveInquiries(inquiries)
-  return NextResponse.json(inquiries[index])
 }
 
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url)
   const id = searchParams.get('id')
   if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 })
-  let inquiries = getInquiries()
-  inquiries = inquiries.filter((i) => i.id !== id)
-  saveInquiries(inquiries)
+  await deleteInquiry(id)
   return NextResponse.json({ success: true })
 }

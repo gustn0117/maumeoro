@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server'
-import { getProducts, saveProducts, Product } from '@/lib/data'
+import { getProducts, addProduct, updateProduct, deleteProduct } from '@/lib/data'
 
 export async function GET() {
-  const products = getProducts()
+  const products = await getProducts()
   return NextResponse.json(products)
 }
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const products = getProducts()
-  const newProduct: Product = {
-    id: String(Date.now()),
+  const product = await addProduct({
     name: body.name || '',
     nameKo: body.nameKo || '',
     category: body.category || 'bath',
@@ -20,29 +18,24 @@ export async function POST(request: Request) {
     features: body.features || [],
     image: body.image || '/images/product-bath.jpg',
     inStock: body.inStock !== false,
-    createdAt: new Date().toISOString().split('T')[0],
-  }
-  products.push(newProduct)
-  saveProducts(products)
-  return NextResponse.json(newProduct, { status: 201 })
+  })
+  return NextResponse.json(product, { status: 201 })
 }
 
 export async function PUT(request: Request) {
   const body = await request.json()
-  const products = getProducts()
-  const index = products.findIndex((p) => p.id === body.id)
-  if (index === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  products[index] = { ...products[index], ...body }
-  saveProducts(products)
-  return NextResponse.json(products[index])
+  try {
+    const updated = await updateProduct(body.id, body)
+    return NextResponse.json(updated)
+  } catch {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
 }
 
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url)
   const id = searchParams.get('id')
   if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 })
-  let products = getProducts()
-  products = products.filter((p) => p.id !== id)
-  saveProducts(products)
+  await deleteProduct(id)
   return NextResponse.json({ success: true })
 }
