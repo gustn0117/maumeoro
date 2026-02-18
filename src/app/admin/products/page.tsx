@@ -43,6 +43,8 @@ export default function AdminProductsPage() {
   const [form, setForm] = useState(emptyForm)
   const [featuresInput, setFeaturesInput] = useState('')
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   useEffect(() => {
     fetchProducts()
@@ -64,6 +66,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null)
     setForm(emptyForm)
     setFeaturesInput('')
+    setImagePreview(null)
     setShowModal(true)
   }
 
@@ -81,6 +84,7 @@ export default function AdminProductsPage() {
       inStock: product.inStock,
     })
     setFeaturesInput(product.features.join(', '))
+    setImagePreview(product.image || null)
     setShowModal(true)
   }
 
@@ -89,6 +93,36 @@ export default function AdminProductsPage() {
     setEditingProduct(null)
     setForm(emptyForm)
     setFeaturesInput('')
+    setImagePreview(null)
+  }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // 로컬 미리보기
+    const reader = new FileReader()
+    reader.onload = (ev) => setImagePreview(ev.target?.result as string)
+    reader.readAsDataURL(file)
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (res.ok && data.url) {
+        setForm((prev) => ({ ...prev, image: data.url }))
+      } else {
+        alert(data.error || '이미지 업로드에 실패했습니다.')
+        setImagePreview(null)
+      }
+    } catch {
+      alert('이미지 업로드에 실패했습니다.')
+      setImagePreview(null)
+    } finally {
+      setUploading(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent, showToast: (msg: string) => void) => {
@@ -306,8 +340,53 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-navy mb-1.5">이미지 URL</label>
-                    <input type="text" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} className="w-full px-4 py-2.5 rounded-xl border border-navy/10 text-navy bg-warm-white/50 placeholder:text-navy/25 focus:outline-none focus:ring-2 focus:ring-beige/40 focus:border-beige transition-all text-sm" placeholder="/images/product-bath.jpg" />
+                    <label className="block text-sm font-semibold text-navy mb-1.5">제품 이미지</label>
+                    <div
+                      className="relative w-full rounded-xl border-2 border-dashed border-navy/15 hover:border-beige/60 bg-warm-white/30 transition-all cursor-pointer overflow-hidden"
+                      onClick={() => document.getElementById('image-upload')?.click()}
+                    >
+                      {imagePreview ? (
+                        <div className="relative">
+                          <img src={imagePreview} alt="미리보기" className="w-full h-48 object-contain bg-warm-white" />
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setImagePreview(null)
+                              setForm((prev) => ({ ...prev, image: '' }))
+                            }}
+                            className="absolute top-2 right-2 p-1.5 rounded-lg bg-navy/60 text-white hover:bg-navy/80 transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                          {uploading && (
+                            <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+                              <svg className="w-8 h-8 animate-spin text-beige" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-8 px-4">
+                          <svg className="w-10 h-10 text-navy/20 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <p className="text-sm text-navy/40 font-medium">클릭하여 이미지를 선택하세요</p>
+                          <p className="text-xs text-navy/25 mt-1">JPG, PNG, WebP (최대 5MB)</p>
+                        </div>
+                      )}
+                      <input
+                        id="image-upload"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-3">
