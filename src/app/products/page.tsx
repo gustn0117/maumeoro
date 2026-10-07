@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useCart } from '@/context/CartContext'
-import ScrollReveal from '@/components/ScrollReveal'
+import PageHeader from '@/components/PageHeader'
 
 interface Product {
   id: string
@@ -30,6 +30,12 @@ export default function ProductsPage() {
   const { addItem } = useCart()
 
   useEffect(() => {
+    // 홈의 카테고리 카드(/products?category=bath 등)로 들어온 경우 해당 탭을 연다
+    const requested = new URLSearchParams(window.location.search).get('category')
+    if (requested && categories.some((c) => c.value === requested)) {
+      setActiveCategory(requested)
+    }
+
     fetch('/api/products')
       .then((res) => res.json())
       .then((data) => { setProducts(data); setLoading(false) })
@@ -55,17 +61,13 @@ export default function ProductsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="page-hero py-16 sm:py-20">
-        <div className="absolute inset-0 decorative-dots-light pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block text-beige/60 text-xs tracking-[0.3em] uppercase font-semibold mb-3">Our Products</span>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">제품소개</h1>
-          <p className="text-white/40 text-sm max-w-md mx-auto">유럽에서 검증된 프리미엄 목욕·세정용품을 합리적인 가격으로 만나보세요.</p>
-        </div>
-      </section>
+      <PageHeader
+        title="제품소개"
+        description="유럽에서 검증된 프리미엄 목욕·세정용품을 합리적인 가격으로 만나보세요."
+      />
 
       {/* Category Filter */}
-      <section className="sticky top-[70px] z-30 bg-white/95 backdrop-blur-lg border-b border-navy/5">
+      <section className="sticky top-[70px] z-30 bg-white/95 border-b border-navy/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-1 py-0 overflow-x-auto">
             {categories.map((cat) => (
@@ -75,7 +77,7 @@ export default function ProductsPage() {
                 className={`relative px-5 py-4 text-sm font-medium whitespace-nowrap transition-all ${
                   activeCategory === cat.value
                     ? 'text-navy'
-                    : 'text-navy/40 hover:text-navy/70'
+                    : 'text-ink-mute hover:text-ink-soft'
                 }`}
               >
                 {cat.label}
@@ -84,7 +86,7 @@ export default function ProductsPage() {
                 )}
               </button>
             ))}
-            <span className="ml-auto text-xs text-navy/25 py-4">{filtered.length}개 제품</span>
+            <span className="ml-auto text-xs text-ink-mute py-4">{filtered.length}개 제품</span>
           </div>
         </div>
       </section>
@@ -96,7 +98,7 @@ export default function ProductsPage() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               {[...Array(4)].map((_, i) => (
                 <div key={i}>
-                  <div className="aspect-square bg-navy/5 rounded-2xl mb-4 skeleton-shimmer" />
+                  <div className="aspect-square bg-navy/5 rounded-xl mb-4 skeleton-shimmer" />
                   <div className="h-4 bg-navy/5 rounded w-3/4 mb-2 skeleton-shimmer" />
                   <div className="h-3 bg-navy/5 rounded w-1/2 skeleton-shimmer" />
                 </div>
@@ -104,19 +106,19 @@ export default function ProductsPage() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-20">
-              <div className="w-20 h-20 mx-auto rounded-2xl bg-navy/[0.03] flex items-center justify-center mb-5 animate-[bounce_3s_ease-in-out_infinite]">
-                <svg className="w-10 h-10 text-navy/15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-20 h-20 mx-auto rounded-xl bg-navy/5 flex items-center justify-center mb-5">
+                <svg className="w-10 h-10 text-navy/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <p className="text-navy/30 text-lg">해당 카테고리에 제품이 없습니다.</p>
+              <p className="text-ink-mute text-lg">해당 카테고리에 제품이 없습니다.</p>
             </div>
           ) : (
-            <ScrollReveal direction="up">
+            <div>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
                 {filtered.map((product) => (
                   <Link key={product.id} href={`/products/${product.id}`} className="group card-hover-lift">
-                    <div className="relative rounded-2xl overflow-hidden aspect-square bg-warm-white mb-4 shadow-card transition-all duration-300 group-hover:shadow-card-hover group-hover:-translate-y-1">
+                    <div className="relative rounded-xl overflow-hidden aspect-square bg-aloe mb-4 shadow-line transition-all duration-300 group-hover:shadow-raised">
                       <img
                         src={product.image}
                         alt={product.nameKo}
@@ -124,14 +126,14 @@ export default function ProductsPage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       {!product.inStock && (
-                        <div className="absolute top-3 left-3 bg-navy/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-full">
+                        <div className="absolute top-3 left-3 bg-navy/80 text-white text-xs font-bold px-2.5 py-1 rounded-full">
                           품절
                         </div>
                       )}
                       {product.inStock && (
                         <button
                           onClick={(e) => handleAddToCart(e, product)}
-                          className="absolute bottom-3 right-3 w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center text-navy/60 hover:text-beige hover:scale-110 transition-all opacity-0 group-hover:opacity-100"
+                          className="absolute bottom-3 right-3 w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center text-ink-soft hover:text-beige-deep transition-all opacity-0 group-hover:opacity-100"
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -140,13 +142,13 @@ export default function ProductsPage() {
                       )}
                     </div>
                     <div>
-                      <span className="text-[10px] text-beige font-semibold uppercase tracking-wider">
+                      <span className="text-xs text-beige-deep font-semibold">
                         {categories.find((c) => c.value === product.category)?.label}
                       </span>
-                      <h3 className="text-[15px] font-bold text-navy group-hover:text-beige transition-colors mt-1 leading-snug">
+                      <h3 className="text-[15px] font-bold text-navy group-hover:text-beige-deep transition-colors mt-1 leading-snug">
                         {product.nameKo}
                       </h3>
-                      <p className="text-[11px] text-navy/30 mt-0.5">{product.name}</p>
+                      <p className="text-xs text-ink-mute mt-0.5">{product.name}</p>
                       <p className="text-sm font-bold text-navy mt-2">
                         ₩{product.price.toLocaleString('ko-KR')}
                       </p>
@@ -154,7 +156,7 @@ export default function ProductsPage() {
                   </Link>
                 ))}
               </div>
-            </ScrollReveal>
+            </div>
           )}
         </div>
       </section>

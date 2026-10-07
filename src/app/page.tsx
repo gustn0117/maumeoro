@@ -1,289 +1,237 @@
-'use client'
-
-import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import HeroSlider from '@/components/HeroSlider'
-import ScrollReveal from '@/components/ScrollReveal'
+import { getProducts, getNews, Product, NewsItem } from '@/lib/data'
 
-const features = [
-  { icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', label: '검증된 품질', sub: 'CE 인증 제품' },
-  { icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', label: '합리적 가격', sub: '유통 최적화' },
-  { icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z', label: '진심 돌봄', sub: '맞춤 상담' },
-  { icon: 'M13 10V3L4 14h7v7l9-11h-7z', label: '빠른 배송', sub: '전국 당일출고' },
+// 제품·소식을 요청 시점에 DB에서 읽는다 (빌드 시점에 고정되지 않도록)
+export const dynamic = 'force-dynamic'
+
+const PHONE = '010-6667-2314'
+
+const strengths = [
+  { label: '검증된 품질', sub: 'CE 인증 제품' },
+  { label: '합리적 가격', sub: '유통 최적화' },
+  { label: '진심 돌봄', sub: '맞춤 상담' },
+  { label: '빠른 배송', sub: '전국 당일출고' },
 ]
 
-const newsItems: { id: number; title: string; date: string; category: string; isNew: boolean }[] = []
-
-const bestProducts: { id: number; nameKo: string; nameEn: string; description: string; image: string }[] = []
-
-const partnerItems = [
-  { icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4', label: '요양병원' },
-  { icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', label: '요양원' },
-  { icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z', label: '복지관' },
-  { icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', label: '재가센터' },
-  { icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', label: '데이케어' },
-  { icon: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z', label: '의료기관' },
-  { icon: 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z', label: '공공기관' },
-  { icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', label: '돌봄시설' },
+const categories = [
+  { value: 'bath', label: '목욕·세정', description: '침상 목욕과 세정에 쓰는 용품' },
+  { value: 'hygiene', label: '배뇨·위생', description: '배뇨 관리와 위생에 쓰는 용품' },
+  { value: 'disinfect', label: '소독·감염관리', description: '시설과 가정의 소독, 감염 예방 용품' },
 ]
 
-export default function HomePage() {
-  const logosRef = useRef<HTMLDivElement>(null)
+const categoryLabels: Record<string, string> = Object.fromEntries(
+  categories.map((c) => [c.value, c.label])
+)
 
-  useEffect(() => {
-    const el = logosRef.current
-    if (!el) return
-    let animationId: number
-    let position = 0
-    const speed = 0.4
+const newsCategoryLabels: Record<string, string> = {
+  notice: '공지',
+  product: '제품',
+  guide: '안내',
+}
 
-    const animate = () => {
-      position += speed
-      if (position >= el.scrollWidth / 2) position = 0
-      el.style.transform = `translateX(-${position}px)`
-      animationId = requestAnimationFrame(animate)
-    }
+const supplyPlaces = ['요양병원', '요양원', '복지관', '재가센터', '데이케어', '의료기관', '공공기관', '돌봄시설']
 
-    animationId = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(animationId)
-  }, [])
+function Chevron() {
+  return (
+    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+    </svg>
+  )
+}
+
+async function loadHomeData(): Promise<{ products: Product[]; news: NewsItem[] }> {
+  // DB가 응답하지 않아도 홈 화면은 떠야 하므로 각각 빈 목록으로 대체한다
+  const [products, news] = await Promise.all([
+    getProducts().catch(() => [] as Product[]),
+    getNews().catch(() => [] as NewsItem[]),
+  ])
+  return {
+    products: [...products].sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')).slice(0, 4),
+    news: news.filter((n) => n.published).slice(0, 4),
+  }
+}
+
+export default async function HomePage() {
+  const { products, news } = await loadHomeData()
 
   return (
     <>
-      {/* Hero Slider */}
-      <HeroSlider />
-
-      {/* Feature Strip */}
-      <ScrollReveal direction="scale" className="relative -mt-12 z-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl shadow-elevated grid grid-cols-2 lg:grid-cols-4">
-            {features.map((f, i) => (
-              <div key={i} className="relative flex items-center gap-3.5 px-5 lg:px-6 py-6 group cursor-default">
-                {/* Left accent line */}
-                {i > 0 && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-8 bg-navy/[0.06]" />}
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-beige/15 to-beige/5 flex items-center justify-center flex-shrink-0 group-hover:from-beige/25 group-hover:to-beige/15 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-glow-beige transition-all duration-300">
-                  <svg className="w-5 h-5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={f.icon} />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-navy leading-none">{f.label}</p>
-                  <p className="text-[11px] text-navy/30 mt-1 group-hover:text-beige/60 transition-colors">{f.sub}</p>
-                </div>
-              </div>
-            ))}
+      {/* Hero */}
+      <section className="bg-aloe">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="lg:col-span-6">
+            <p className="font-semibold text-beige-deep animate-rise-in">노인돌봄 용품 전문점</p>
+            <h1
+              className="mt-3 text-[2.5rem] sm:text-5xl lg:text-[3.5rem] font-extrabold text-navy leading-[1.18] tracking-tight animate-rise-in"
+              style={{ animationDelay: '80ms' }}
+            >
+              마음을 담아,
+              <br />
+              돌봄을 더하다
+            </h1>
+            <p
+              className="mt-6 text-lg sm:text-xl sm:leading-8 text-ink-soft max-w-xl animate-rise-in"
+              style={{ animationDelay: '160ms' }}
+            >
+              부모님을 돌보는 모든 분들께, 진심을 담은 제품으로 함께합니다.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 animate-rise-in" style={{ animationDelay: '240ms' }}>
+              <Link href="/products" className="btn-primary">제품 보기</Link>
+              <Link href="/catalog" className="btn-outline">카탈로그 요청</Link>
+            </div>
+            <div
+              className="mt-8 pt-6 border-t border-navy/15 flex flex-wrap items-baseline gap-x-4 gap-y-1 animate-rise-in"
+              style={{ animationDelay: '320ms' }}
+            >
+              <span className="font-semibold text-navy">상담 전화</span>
+              <a href={`tel:${PHONE}`} className="text-3xl font-extrabold text-navy hover:text-beige-deep transition-colors">
+                {PHONE}
+              </a>
+              <span className="text-sm text-ink-soft">평일 09:00 ~ 18:00 / 주말 및 공휴일 ~ 13:00</span>
+            </div>
           </div>
-        </div>
-      </ScrollReveal>
-
-      {/* News + Best Product Section */}
-      <section className="py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-            {/* 소식지 (News) */}
-            <ScrollReveal direction="left" className="lg:col-span-4">
-              <div className="bg-white rounded-2xl shadow-card overflow-hidden h-full flex flex-col">
-                <div className="px-7 pt-7 pb-5 flex items-end justify-between">
-                  <div>
-                    <h2 className="text-xl font-bold text-navy">소식지</h2>
-                    <span className="text-[10px] text-navy/20 tracking-[0.2em] uppercase font-medium">news</span>
-                  </div>
-                  <Link href="/news" className="text-xs font-semibold text-beige hover:text-navy transition-colors flex items-center gap-1 group">
-                    더보기
-                    <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-
-                <div className="flex-1 px-3 pb-4">
-                  {newsItems.length > 0 ? newsItems.map((item) => (
-                    <Link
-                      key={item.id}
-                      href="/news"
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-navy/[0.02] transition-colors group ${
-                        item.isNew ? 'bg-beige/[0.04]' : ''
-                      }`}
-                    >
-                      <span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full ${
-                        item.category === '공지' ? 'bg-rose-400' : item.category === '제품' ? 'bg-blue-400' : 'bg-navy/15'
-                      }`} />
-                      <span className="flex-1 text-[13px] text-navy/55 group-hover:text-navy transition-colors truncate">
-                        {item.title}
-                      </span>
-                      {item.isNew && (
-                        <span className="flex-shrink-0 text-[9px] font-bold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded-full">NEW</span>
-                      )}
-                      <time className="flex-shrink-0 text-[11px] text-navy/15 tabular-nums">{item.date}</time>
-                    </Link>
-                  )) : (
-                    <div className="flex flex-col items-center justify-center py-12 text-center">
-                      <div className="w-16 h-16 rounded-2xl bg-navy/[0.03] flex items-center justify-center mb-4">
-                        <svg className="w-8 h-8 text-navy/15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                      </div>
-                      <p className="text-sm font-medium text-navy/30">등록된 소식이 없습니다</p>
-                      <p className="text-xs text-navy/20 mt-1">새로운 소식을 준비 중입니다</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Best Product */}
-            <ScrollReveal direction="right" className="lg:col-span-8">
-              <div className="bg-white rounded-2xl shadow-card overflow-hidden h-full">
-                <div className="px-7 pt-7 pb-5 flex items-end justify-between">
-                  <div>
-                    <h2 className="text-xl font-bold text-navy">Best Product</h2>
-                    <span className="text-[10px] text-navy/20 tracking-[0.2em] uppercase font-medium">인기 제품</span>
-                  </div>
-                  <Link href="/products" className="text-xs font-semibold text-beige hover:text-navy transition-colors flex items-center gap-1 group">
-                    전체보기
-                    <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-
-                <div className="px-7 pb-7">
-                  {bestProducts.length > 0 ? (
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                      {bestProducts.map((product) => (
-                        <Link key={product.id} href="/products" className="group">
-                          <div className="relative rounded-2xl overflow-hidden aspect-square bg-warm-white mb-3">
-                            <img
-                              src={product.image}
-                              alt={product.nameKo}
-                              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-navy/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
-                              <span className="text-white text-xs font-semibold bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                                자세히 보기
-                              </span>
-                            </div>
-                          </div>
-                          <div className="px-0.5">
-                            <p className="text-[13px] font-bold text-navy group-hover:text-beige transition-colors leading-snug">
-                              {product.nameKo}
-                            </p>
-                            <p className="text-[10px] text-navy/25 mt-0.5">{product.nameEn}</p>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-16 text-center">
-                      <div className="w-20 h-20 rounded-2xl bg-navy/[0.03] flex items-center justify-center mb-4">
-                        <svg className="w-10 h-10 text-navy/15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                      </div>
-                      <p className="text-sm font-medium text-navy/30">등록된 제품이 없습니다</p>
-                      <p className="text-xs text-navy/20 mt-1">새로운 제품을 준비 중입니다</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </ScrollReveal>
+          <div className="lg:col-span-6">
+            <div className="relative aspect-[16/10] lg:aspect-[4/3] rounded-2xl overflow-hidden bg-navy/5">
+              <img
+                src="/images/hero-3.jpg"
+                alt="보호자가 어르신의 손을 두 손으로 감싸 쥔 모습"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 상담예약 Bar */}
-      <ScrollReveal>
-        <section className="pb-12">
+      {/* 강점 */}
+      <section className="border-b border-navy/10">
+        <dl className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-5">
+          {strengths.map((s) => (
+            <div key={s.label}>
+              <dt className="text-lg font-bold text-navy">{s.label}</dt>
+              <dd className="mt-0.5 text-ink-soft">{s.sub}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* 카테고리 */}
+      <section className="py-14 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">어떤 용품을 찾으세요?</h2>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+            {categories.map((c) => (
+              <Link
+                key={c.value}
+                href={`/products?category=${c.value}`}
+                className="group flex flex-col justify-between min-h-[168px] rounded-xl bg-white shadow-line p-6 lg:p-7 card-hover"
+              >
+                <div>
+                  <h3 className="text-2xl font-bold text-navy">{c.label}</h3>
+                  <p className="mt-2 text-ink-soft">{c.description}</p>
+                </div>
+                <span className="mt-6 inline-flex items-center gap-1 font-semibold text-beige-deep group-hover:text-navy transition-colors">
+                  제품 보기
+                  <Chevron />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 보호자의 고민 */}
+      <section className="bg-navy on-dark">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <p className="text-lg font-semibold text-beige-light">돌봄은 늘 현실과 마주합니다.</p>
+          <blockquote className="mt-6 space-y-4 text-[1.625rem] leading-[1.4] sm:text-4xl sm:leading-[1.35] lg:text-[2.75rem] lg:leading-[1.3] font-bold text-white tracking-tight">
+            <p>&ldquo;좋은 제품을 쓰고 싶지만 부담은 줄이고 싶다.&rdquo;</p>
+            <p>&ldquo;편하게 해드리고 싶지만 비용도 생각해야 한다.&rdquo;</p>
+          </blockquote>
+          <p className="mt-10 text-lg sm:text-xl sm:leading-8 text-white/85 max-w-2xl">
+            저희는 그 고민을 이해합니다. 가격만 낮춘 제품도, 이름값만 높은 제품도 선택하지 않습니다.
+            합리적인 비용으로, 실제로 도움이 되는 품질을 갖춘 제품만을 공급합니다.
+          </p>
+          <Link href="/about" className="btn-ghost-light mt-8">회사소개 보기</Link>
+        </div>
+      </section>
+
+      {/* 제품 */}
+      {products.length > 0 && (
+        <section className="py-14 lg:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-2xl">
-              {/* Background image */}
-              <div className="absolute inset-0">
-                <img src="/images/about-care.jpg" alt="" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/80 to-navy/70 backdrop-blur-sm" />
-              </div>
-              {/* Decorative */}
-              <div className="absolute -right-20 -top-20 w-60 h-60 rounded-full bg-beige/10 blur-[80px]" />
-              <div className="absolute -left-10 -bottom-10 w-40 h-40 rounded-full bg-white/5 blur-[60px]" />
-              <div className="absolute right-10 bottom-0 w-32 h-32 rounded-full bg-beige/5 blur-[50px]" />
-              <div className="absolute inset-0 decorative-dots-light pointer-events-none" />
-
-              <div className="relative flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 px-8 py-8 sm:py-7">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-beige/15 backdrop-blur flex items-center justify-center">
-                    <svg className="w-6 h-6 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+            <div className="flex items-end justify-between gap-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">제품</h2>
+              <Link href="/products" className="inline-flex items-center gap-1 min-h-[44px] font-semibold text-beige-deep hover:text-navy transition-colors">
+                전체 제품 보기
+                <Chevron />
+              </Link>
+            </div>
+            <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 lg:gap-x-6">
+              {products.map((product) => (
+                <Link key={product.id} href={`/products/${product.id}`} className="group">
+                  <div className="relative aspect-square rounded-xl overflow-hidden bg-aloe shadow-line">
+                    <img
+                      src={product.image}
+                      alt={product.nameKo}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {!product.inStock && (
+                      <span className="absolute top-3 left-3 bg-navy text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                        품절
+                      </span>
+                    )}
                   </div>
-                  <div>
-                    <span className="text-lg font-bold text-white">상담예약</span>
-                    <p className="text-[10px] text-beige/40 tracking-widest uppercase">consultation</p>
-                  </div>
-                </div>
-
-                <div className="hidden sm:block w-px h-12 bg-white/10" />
-
-                <a href="tel:010-6667-2314" className="group flex items-center gap-3">
-                  <span className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-beige/20 group-hover:border-beige/30 transition-all">
-                    <svg className="w-4.5 h-4.5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </span>
-                  <span className="text-2xl font-extrabold text-white tracking-wider group-hover:text-beige-light transition-colors relative">
-                    010-6667-2314
-                    <span className="absolute bottom-0 left-0 w-0 h-px bg-beige-light/50 group-hover:w-full transition-all duration-300" />
-                  </span>
-                </a>
-
-                <div className="hidden sm:block w-px h-12 bg-white/10" />
-
-                <div className="text-center sm:text-left">
-                  <p className="text-sm text-white/50">
-                    평일 <span className="text-white/80 font-semibold">09:00 ~ 18:00</span>
-                  </p>
-                  <p className="text-xs text-white/25 mt-1">
-                    주말 및 공휴일 <span className="text-white/40">~ 13:00</span>
-                  </p>
-                </div>
-              </div>
+                  <p className="mt-3 text-sm font-semibold text-beige-deep">{categoryLabels[product.category] ?? product.category}</p>
+                  <h3 className="mt-0.5 text-lg font-bold text-navy group-hover:underline underline-offset-4">{product.nameKo}</h3>
+                  <p className="mt-1 font-bold text-navy">₩{product.price.toLocaleString('ko-KR')}</p>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
-      </ScrollReveal>
+      )}
 
-      {/* 파트너 */}
-      <ScrollReveal>
-        <section className="py-14 overflow-hidden border-t border-navy/[0.04]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-            <div className="flex items-center gap-3">
-              <span className="w-6 h-[1px] bg-beige/40" />
-              <span className="text-[11px] text-navy/25 tracking-[0.2em] uppercase font-semibold">Trusted Partners</span>
+      {/* 공지사항 */}
+      {news.length > 0 && (
+        <section className="bg-aloe py-14 lg:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-end justify-between gap-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">공지사항</h2>
+              <Link href="/news" className="inline-flex items-center gap-1 min-h-[44px] font-semibold text-beige-deep hover:text-navy transition-colors">
+                전체 보기
+                <Chevron />
+              </Link>
             </div>
-          </div>
-          <div className="relative">
-            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-warm-white to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-warm-white to-transparent z-10 pointer-events-none" />
-
-            <div className="overflow-hidden">
-              <div ref={logosRef} className="flex" style={{ willChange: 'transform' }}>
-                {[...partnerItems, ...partnerItems].map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex-shrink-0 w-[180px] h-[80px] mx-3 bg-white rounded-2xl border border-navy/[0.04] flex items-center justify-center gap-3 shadow-soft hover:shadow-card hover:border-beige/20 transition-all duration-300 group"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-navy/[0.03] flex items-center justify-center group-hover:bg-beige/10 transition-colors">
-                      <svg className="w-4.5 h-4.5 text-navy/20 group-hover:text-beige transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={item.icon} />
-                      </svg>
-                    </div>
-                    <span className="text-[13px] text-navy/25 font-semibold group-hover:text-navy/40 transition-colors">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ul className="mt-6 bg-white rounded-xl shadow-line divide-y divide-navy/10">
+              {news.map((item) => (
+                <li key={item.id}>
+                  <Link href="/news" className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4 hover:bg-aloe/60 transition-colors">
+                    <span className="flex items-center gap-3 sm:w-48 flex-shrink-0 text-sm text-ink-soft">
+                      <time dateTime={item.date} className="tabular-nums">{item.date}</time>
+                      <span className="badge badge-neutral">{newsCategoryLabels[item.category] ?? item.category}</span>
+                    </span>
+                    <span className="font-semibold text-navy">{item.title}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
-      </ScrollReveal>
+      )}
+
+      {/* 공급처 */}
+      <section className="py-14 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">돌봄이 이루어지는 곳에 공급합니다</h2>
+          <ul className="mt-6 flex flex-wrap gap-2.5">
+            {supplyPlaces.map((place) => (
+              <li key={place} className="px-5 py-2.5 rounded-full bg-aloe font-semibold text-navy">
+                {place}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
     </>
   )
 }

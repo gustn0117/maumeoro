@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import ScrollReveal from '@/components/ScrollReveal'
+import PageHeader from '@/components/PageHeader'
 
 interface FaqItem {
   id: string
@@ -73,17 +73,13 @@ export default function FaqPage() {
   return (
     <>
       {/* Hero */}
-      <section className="page-hero py-16 sm:py-20">
-        <div className="absolute inset-0 decorative-dots-light pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block text-beige/60 text-xs tracking-[0.3em] uppercase font-semibold mb-3">FAQ</span>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">자주 묻는 질문</h1>
-          <p className="text-white/40 text-sm max-w-md mx-auto">궁금하신 점을 빠르게 확인해 보세요.</p>
-        </div>
-      </section>
+      <PageHeader
+        title="자주 묻는 질문"
+        description="궁금하신 점을 빠르게 확인해 보세요."
+      />
 
       {/* Category Filter */}
-      <section className="sticky top-[70px] z-30 bg-white/95 backdrop-blur-lg border-b border-navy/5">
+      <section className="sticky top-[70px] z-30 bg-white/95 border-b border-navy/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 py-4 overflow-x-auto">
             {Object.entries(categoryLabels).map(([key, label]) => (
@@ -93,7 +89,7 @@ export default function FaqPage() {
                 className={`flex items-center gap-1.5 px-5 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
                   activeCategory === key
                     ? 'bg-navy text-white'
-                    : 'bg-navy/5 text-navy/50 hover:bg-navy/10'
+                    : 'bg-navy/5 text-ink-soft hover:bg-navy/10'
                 }`}
               >
                 {categoryIcons[key]}
@@ -105,12 +101,12 @@ export default function FaqPage() {
       </section>
 
       {/* FAQ List */}
-      <section className="py-12 bg-warm-white">
+      <section className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="space-y-4">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="animate-pulse bg-white rounded-2xl p-6">
+                <div key={i} className="animate-pulse bg-white rounded-xl p-6 shadow-line">
                   <div className="h-4 bg-navy/5 rounded w-2/3 mb-3" />
                   <div className="h-3 bg-navy/5 rounded w-1/3" />
                 </div>
@@ -118,35 +114,35 @@ export default function FaqPage() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-20">
-              <svg className="w-16 h-16 text-navy/10 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-16 h-16 text-navy/30 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-navy/30 text-lg">등록된 FAQ가 없습니다.</p>
+              <p className="text-ink-mute text-lg">등록된 FAQ가 없습니다.</p>
             </div>
           ) : (
             <div className="space-y-3">
               {filtered.map((item, index) => (
-                <ScrollReveal key={item.id} direction="up" delay={Math.min(index, 4)}>
+                <div key={item.id}>
                   <div
-                    className={`rounded-2xl shadow-soft overflow-hidden hover:shadow-card-hover transition-all ${
-                      expandedId === item.id ? 'border-l-2 border-beige bg-warm-white' : 'border-l-2 border-transparent bg-white'
+                    className={`rounded-xl shadow-line overflow-hidden hover:shadow-raised transition-all ${
+                      expandedId === item.id ? 'border-l-2 border-beige bg-aloe' : 'border-l-2 border-transparent bg-white'
                     }`}
                   >
                     <button
                       onClick={() => toggleItem(item.id)}
                       className="w-full flex items-center gap-4 px-6 py-5 text-left"
                     >
-                      <span className="flex-shrink-0 w-8 h-8 rounded-full bg-beige/10 text-beige font-bold text-sm flex items-center justify-center">
+                      <span className="flex-shrink-0 w-8 h-8 rounded-full bg-beige/10 text-beige-deep font-bold text-sm flex items-center justify-center">
                         Q
                       </span>
                       <span className="flex-1 text-[15px] font-semibold text-navy">
                         {item.question}
                       </span>
-                      <span className="flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-navy/5 text-navy/40">
+                      <span className="flex-shrink-0 text-xs font-bold px-2.5 py-1 rounded-full bg-navy/5 text-ink-mute">
                         {categoryLabels[item.category] || item.category}
                       </span>
                       <svg
-                        className={`w-4 h-4 text-navy/20 flex-shrink-0 transition-transform duration-300 ${
+                        className={`w-4 h-4 text-ink-mute flex-shrink-0 transition-transform duration-300 ${
                           expandedId === item.id ? 'rotate-180' : ''
                         }`}
                         fill="none"
@@ -163,11 +159,11 @@ export default function FaqPage() {
                     >
                       <div className="overflow-hidden">
                         <div className="px-6 pb-6 pt-0">
-                          <div className="border-t border-navy/5 pt-4 flex gap-4">
+                          <div className="border-t border-navy/10 pt-4 flex gap-4">
                             <span className="flex-shrink-0 w-8 h-8 rounded-full bg-navy/10 text-navy font-bold text-sm flex items-center justify-center">
                               A
                             </span>
-                            <p className="text-sm text-navy/60 leading-relaxed whitespace-pre-line pt-1">
+                            <p className="text-sm text-ink-soft leading-relaxed whitespace-pre-line pt-1">
                               {item.answer}
                             </p>
                           </div>
@@ -175,7 +171,7 @@ export default function FaqPage() {
                       </div>
                     </div>
                   </div>
-                </ScrollReveal>
+                </div>
               ))}
             </div>
           )}

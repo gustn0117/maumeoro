@@ -3,7 +3,7 @@
 import { useState, useEffect, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
-import ScrollReveal from '@/components/ScrollReveal'
+import PageHeader from '@/components/PageHeader'
 
 interface Inquiry {
   id: string
@@ -101,7 +101,7 @@ export default function InquiryPage() {
 
   if (isLoading || !isLoggedIn) {
     return (
-      <div className="min-h-screen bg-warm-white flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-beige/30 border-t-beige rounded-full animate-spin" />
       </div>
     )
@@ -110,25 +110,21 @@ export default function InquiryPage() {
   return (
     <>
       {/* Hero */}
-      <section className="page-hero py-16 sm:py-20">
-        <div className="absolute inset-0 decorative-dots-light pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block text-beige/60 text-xs tracking-[0.3em] uppercase font-semibold mb-3">1:1 Inquiry</span>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">1:1 문의</h1>
-          <p className="text-white/40 text-sm max-w-md mx-auto">궁금하신 점이 있으시면 편하게 문의해 주세요.</p>
-        </div>
-      </section>
+      <PageHeader
+        title="1:1 문의"
+        description="궁금하신 점이 있으시면 편하게 문의해 주세요."
+      />
 
-      <section className="py-16 bg-warm-white">
+      <section className="py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Inquiry Form */}
-          <ScrollReveal direction="up">
-            <div className="bg-white rounded-2xl shadow-card overflow-hidden mb-12">
+          <div>
+            <div className="bg-white rounded-xl shadow-line overflow-hidden mb-12">
               {/* Gold accent line */}
-              <div className="h-1 bg-gradient-to-r from-beige to-beige-light" />
+              <div className="h-1 bg-beige" />
               <div className="p-6 sm:p-8">
                 <h2 className="text-lg font-bold text-navy mb-6 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                   문의 작성
@@ -211,13 +207,13 @@ export default function InquiryPage() {
                 </form>
               </div>
             </div>
-          </ScrollReveal>
+          </div>
 
           {/* My Inquiry List */}
-          <ScrollReveal direction="up" delay={1}>
+          <div>
             <div>
               <h2 className="text-lg font-bold text-navy mb-6 flex items-center gap-2">
-                <svg className="w-5 h-5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
                 내 문의 내역
@@ -228,18 +224,18 @@ export default function InquiryPage() {
                   <div className="w-8 h-8 border-2 border-beige/30 border-t-beige rounded-full animate-spin" />
                 </div>
               ) : inquiries.length === 0 ? (
-                <div className="bg-white rounded-2xl p-12 text-center shadow-soft">
-                  <svg className="w-12 h-12 text-navy/10 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="bg-white rounded-xl p-12 text-center shadow-line">
+                  <svg className="w-12 h-12 text-navy/30 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                   </svg>
-                  <p className="text-navy/30 text-sm">문의 내역이 없습니다.</p>
+                  <p className="text-ink-mute text-sm">문의 내역이 없습니다.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {inquiries.map((inq, index) => (
-                    <ScrollReveal key={inq.id} direction="up" delay={Math.min(index, 4)}>
+                    <div key={inq.id}>
                       <div
-                        className={`bg-white rounded-2xl shadow-soft overflow-hidden hover:shadow-card-hover transition-all border-l-4 ${
+                        className={`bg-white rounded-xl shadow-line overflow-hidden hover:shadow-raised transition-all border-l-4 ${
                           inq.status === 'replied' ? 'border-green-500' : 'border-yellow-400'
                         }`}
                       >
@@ -249,7 +245,7 @@ export default function InquiryPage() {
                         >
                           <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-navy/5 text-navy/40">
+                              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-navy/5 text-ink-mute">
                                 {categoryLabels[inq.category] || inq.category}
                               </span>
                               <span
@@ -263,11 +259,11 @@ export default function InquiryPage() {
                               </span>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="text-xs text-navy/20 tabular-nums">
+                              <span className="text-xs text-ink-mute tabular-nums">
                                 {new Date(inq.createdAt).toLocaleDateString('ko-KR')}
                               </span>
                               <svg
-                                className={`w-4 h-4 text-navy/20 flex-shrink-0 transition-transform duration-300 ${
+                                className={`w-4 h-4 text-ink-mute flex-shrink-0 transition-transform duration-300 ${
                                   expandedId === inq.id ? 'rotate-180' : ''
                                 }`}
                                 fill="none"
@@ -288,21 +284,21 @@ export default function InquiryPage() {
                         >
                           <div className="overflow-hidden">
                             <div className="px-6 pb-6 pt-0">
-                              <div className="border-t border-navy/5 pt-4">
-                                <p className="text-sm text-navy/60 leading-relaxed whitespace-pre-line">
+                              <div className="border-t border-navy/10 pt-4">
+                                <p className="text-sm text-ink-soft leading-relaxed whitespace-pre-line">
                                   {inq.content}
                                 </p>
                                 {inq.reply && (
                                   <div className="mt-4 p-4 bg-beige/10 rounded-xl border-l-4 border-beige">
                                     <div className="flex items-center gap-2 mb-2">
-                                      <svg className="w-4 h-4 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <svg className="w-4 h-4 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                       </svg>
-                                      <p className="text-xs font-semibold text-beige">관리자 답변</p>
+                                      <p className="text-xs font-semibold text-beige-deep">관리자 답변</p>
                                     </div>
-                                    <p className="text-sm text-navy/70 whitespace-pre-line">{inq.reply}</p>
+                                    <p className="text-sm text-ink-soft whitespace-pre-line">{inq.reply}</p>
                                     {inq.repliedAt && (
-                                      <p className="text-xs text-navy/30 mt-2">
+                                      <p className="text-xs text-ink-mute mt-2">
                                         {new Date(inq.repliedAt).toLocaleDateString('ko-KR')}
                                       </p>
                                     )}
@@ -313,12 +309,12 @@ export default function InquiryPage() {
                           </div>
                         </div>
                       </div>
-                    </ScrollReveal>
+                    </div>
                   ))}
                 </div>
               )}
             </div>
-          </ScrollReveal>
+          </div>
         </div>
       </section>
     </>

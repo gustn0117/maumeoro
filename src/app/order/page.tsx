@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
-import ScrollReveal from '@/components/ScrollReveal'
+import PageHeader from '@/components/PageHeader'
 
 interface Product {
   id: string
@@ -40,7 +40,7 @@ function StepIndicator() {
                 step.number
               )}
             </div>
-            <span className={`text-xs mt-2 font-medium ${step.number === 2 ? 'text-navy' : step.number < 2 ? 'text-beige' : 'text-navy/30'}`}>
+            <span className={`text-xs mt-2 font-medium ${step.number === 2 ? 'text-navy' : step.number < 2 ? 'text-beige-deep' : 'text-ink-mute'}`}>
               {step.label}
             </span>
           </div>
@@ -135,29 +135,25 @@ function OrderContent() {
 
   return (
     <>
-      <section className="page-hero py-16 sm:py-20">
-        <div className="absolute inset-0 decorative-dots-light pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block text-beige/60 text-xs tracking-[0.3em] uppercase font-semibold mb-3">Order</span>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">신청하기</h1>
-          <p className="text-white/40 text-sm max-w-md mx-auto">아래 정보를 입력해 주시면 담당자가 확인 후 연락드리겠습니다.</p>
-        </div>
-      </section>
+      <PageHeader
+        title="신청하기"
+        description="아래 정보를 입력해 주시면 담당자가 확인 후 연락드리겠습니다."
+      />
 
-      <section className="py-16 bg-warm-white">
+      <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Step Indicator */}
-          <ScrollReveal direction="up">
+          <div>
             <StepIndicator />
-          </ScrollReveal>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Form Section */}
             <div className="lg:col-span-2">
-              <ScrollReveal direction="up" delay={1}>
-                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-card">
+              <div>
+                <div className="bg-white rounded-xl p-6 sm:p-8 shadow-line">
                   <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
-                    <svg className="w-5 h-5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                     신청자 정보
@@ -165,11 +161,11 @@ function OrderContent() {
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label htmlFor="name" className="form-label">이름 <span className="text-red-400">*</span></label>
+                        <label htmlFor="name" className="form-label">이름 <span className="text-red-700">*</span></label>
                         <input type="text" id="name" name="name" required value={form.name} onChange={handleChange} placeholder="홍길동" className="form-input" />
                       </div>
                       <div>
-                        <label htmlFor="phone" className="form-label">연락처 <span className="text-red-400">*</span></label>
+                        <label htmlFor="phone" className="form-label">연락처 <span className="text-red-700">*</span></label>
                         <input type="tel" id="phone" name="phone" required value={form.phone} onChange={handleChange} placeholder="010-0000-0000" className="form-input" />
                       </div>
                     </div>
@@ -184,7 +180,7 @@ function OrderContent() {
                       </div>
                     </div>
                     <div>
-                      <label htmlFor="address" className="form-label">배송주소 <span className="text-red-400">*</span></label>
+                      <label htmlFor="address" className="form-label">배송주소 <span className="text-red-700">*</span></label>
                       <input type="text" id="address" name="address" required value={form.address} onChange={handleChange} placeholder="배송받으실 주소를 입력하세요" className="form-input" />
                     </div>
                     <div>
@@ -210,24 +206,24 @@ function OrderContent() {
                           </>
                         )}
                       </button>
-                      <Link href={isDirect ? '/products' : '/cart'} className="text-navy/40 hover:text-navy text-sm font-medium transition-colors">
+                      <Link href={isDirect ? '/products' : '/cart'} className="text-ink-mute hover:text-navy text-sm font-medium transition-colors">
                         {isDirect ? '제품 목록으로' : '장바구니로 돌아가기'}
                       </Link>
                     </div>
                   </form>
                 </div>
-              </ScrollReveal>
+              </div>
             </div>
 
             {/* Order Summary */}
             <div className="lg:col-span-1">
-              <ScrollReveal direction="right" delay={2}>
-                <div className="bg-white rounded-2xl shadow-card sticky top-28 overflow-hidden">
+              <div>
+                <div className="bg-white rounded-xl shadow-line sticky top-28 overflow-hidden">
                   {/* Gold accent line at top */}
-                  <div className="h-1 bg-gradient-to-r from-beige to-beige-light" />
+                  <div className="h-1 bg-beige" />
                   <div className="p-6 sm:p-8">
                     <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
-                      <svg className="w-5 h-5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
                       신청 요약
@@ -237,29 +233,29 @@ function OrderContent() {
                         <div key={idx} className="flex items-center justify-between gap-3">
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-navy truncate">{item.nameKo}</p>
-                            <p className="text-xs text-navy/40">{item.price.toLocaleString('ko-KR')} x {item.quantity}</p>
+                            <p className="text-xs text-ink-mute">{item.price.toLocaleString('ko-KR')} x {item.quantity}</p>
                           </div>
                           <span className="text-sm font-semibold text-navy whitespace-nowrap">{(item.price * item.quantity).toLocaleString('ko-KR')}</span>
                         </div>
                       ))}
                     </div>
-                    <div className="border-t border-navy/10 pt-4">
+                    <div className="border-t border-navy/15 pt-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-navy/50 font-medium">총 합계</span>
+                        <span className="text-ink-soft font-medium">총 합계</span>
                         <span className="text-2xl font-bold text-navy">{totalAmount.toLocaleString('ko-KR')}</span>
                       </div>
                     </div>
-                    <div className="mt-6 p-4 rounded-xl bg-warm-white border border-navy/5">
+                    <div className="mt-6 p-4 rounded-xl bg-aloe border border-navy/10">
                       <div className="flex gap-3">
-                        <svg className="w-5 h-5 text-beige flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-5 h-5 text-beige-deep flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p className="text-xs text-navy/50 leading-relaxed">신청 후 담당자가 확인하여 최종 견적과 결제 안내를 드립니다. 대량 구매 시 별도 할인이 적용될 수 있습니다.</p>
+                        <p className="text-xs text-ink-soft leading-relaxed">신청 후 담당자가 확인하여 최종 견적과 결제 안내를 드립니다. 대량 구매 시 별도 할인이 적용될 수 있습니다.</p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </ScrollReveal>
+              </div>
             </div>
           </div>
         </div>
@@ -270,7 +266,7 @@ function OrderContent() {
 
 export default function OrderPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-warm-white flex items-center justify-center"><div className="w-8 h-8 border-2 border-beige/30 border-t-beige rounded-full animate-spin" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center"><div className="w-8 h-8 border-2 border-beige/30 border-t-beige rounded-full animate-spin" /></div>}>
       <OrderContent />
     </Suspense>
   )

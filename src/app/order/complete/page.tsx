@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import ScrollReveal from '@/components/ScrollReveal'
+import PageHeader from '@/components/PageHeader'
 
 function StepIndicatorComplete() {
   const steps = [
@@ -22,7 +22,7 @@ function StepIndicatorComplete() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <span className="text-xs mt-2 font-medium text-beige">
+            <span className="text-xs mt-2 font-medium text-beige-deep">
               {step.label}
             </span>
           </div>
@@ -42,38 +42,29 @@ function OrderCompleteContent() {
   return (
     <>
       {/* Hero */}
-      <section className="page-hero py-16 sm:py-20">
-        <div className="absolute inset-0 decorative-dots-light pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block text-beige/60 text-xs tracking-[0.3em] uppercase font-semibold mb-3">Order Complete</span>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">신청 완료</h1>
-          <p className="text-white/40 text-sm max-w-md mx-auto">주문이 성공적으로 접수되었습니다.</p>
-        </div>
-      </section>
+      <PageHeader
+        title="신청 완료"
+        description="주문이 성공적으로 접수되었습니다."
+      />
 
       {/* Complete State */}
-      <section className="py-24 bg-warm-white">
+      <section className="py-24 bg-aloe">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Step Indicator */}
-          <ScrollReveal direction="up">
+          <div>
             <StepIndicatorComplete />
-          </ScrollReveal>
+          </div>
 
-          <ScrollReveal direction="scale" delay={1}>
-            <div className="bg-white rounded-2xl p-8 sm:p-12 shadow-card">
+          <div>
+            <div className="bg-white rounded-xl p-8 sm:p-12 shadow-line">
 
               {/* Success Icon with animation */}
               <div className="relative w-20 h-20 mx-auto mb-6">
                 <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center animate-success-pulse">
-                  <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-10 h-10 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path className="animate-check-draw" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                {/* Particle circles */}
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-beige/40 animate-float" />
-                <span className="absolute top-1/2 -left-3 w-2 h-2 rounded-full bg-green-300/50 animate-float" style={{ animationDelay: '0.5s' }} />
-                <span className="absolute -bottom-1 right-3 w-3 h-3 rounded-full bg-beige/30 animate-float" style={{ animationDelay: '1s' }} />
-                <span className="absolute top-0 left-1/4 w-1.5 h-1.5 rounded-full bg-green-200/60 animate-float" style={{ animationDelay: '1.5s' }} />
               </div>
 
               {/* Message */}
@@ -82,49 +73,49 @@ function OrderCompleteContent() {
               </h2>
 
               {orderId && (
-                <div className="inline-flex items-center gap-2 bg-warm-white px-5 py-2.5 rounded-full mb-4">
-                  <span className="text-navy/40 text-sm">주문번호</span>
+                <div className="inline-flex items-center gap-2 bg-aloe px-5 py-2.5 rounded-full mb-4">
+                  <span className="text-ink-mute text-sm">주문번호</span>
                   <span className="font-mono font-semibold text-navy text-sm">{orderId}</span>
                 </div>
               )}
 
-              <p className="text-navy/50 text-lg mb-2">
+              <p className="text-ink-soft text-lg mb-2">
                 담당자가 확인 후 연락드리겠습니다.
               </p>
-              <p className="text-navy/35 text-sm mb-10 max-w-md mx-auto">
+              <p className="text-ink-mute text-sm mb-10 max-w-md mx-auto">
                 신청 내역을 확인하신 후 영업일 기준 1~2일 이내에 연락드리겠습니다. 문의사항이 있으시면 언제든 연락해 주세요.
               </p>
 
               {/* Info Items with Icons */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-warm-white">
+                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-aloe">
                   <div className="w-10 h-10 rounded-full bg-beige/10 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <span className="text-xs text-navy/50 text-center">1~2 영업일 내<br />확인 연락</span>
+                  <span className="text-xs text-ink-soft text-center">1~2 영업일 내<br />확인 연락</span>
                 </div>
-                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-warm-white">
+                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-aloe">
                   <div className="w-10 h-10 rounded-full bg-beige/10 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
-                  <span className="text-xs text-navy/50 text-center">최종 견적<br />안내</span>
+                  <span className="text-xs text-ink-soft text-center">최종 견적<br />안내</span>
                 </div>
-                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-warm-white">
+                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-aloe">
                   <div className="w-10 h-10 rounded-full bg-beige/10 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                   </div>
-                  <span className="text-xs text-navy/50 text-center">언제든<br />문의 가능</span>
+                  <span className="text-xs text-ink-soft text-center">언제든<br />문의 가능</span>
                 </div>
               </div>
 
               {/* Divider */}
-              <div className="w-16 h-0.5 bg-gradient-to-r from-beige/20 via-beige/40 to-beige/20 mx-auto mb-10" />
+              <div className="w-16 h-0.5 bg-beige mx-auto mb-10" />
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -148,7 +139,7 @@ function OrderCompleteContent() {
                 </Link>
               </div>
             </div>
-          </ScrollReveal>
+          </div>
         </div>
       </section>
     </>
@@ -159,7 +150,7 @@ export default function OrderCompletePage() {
   return (
     <Suspense
       fallback={
-        <div className="pt-32 pb-24 bg-warm-white min-h-screen flex items-center justify-center">
+        <div className="pt-32 pb-24 bg-aloe min-h-screen flex items-center justify-center">
           <div className="w-8 h-8 border-2 border-beige/30 border-t-beige rounded-full animate-spin" />
         </div>
       }

@@ -4,7 +4,6 @@ import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
-import ScrollReveal from '@/components/ScrollReveal'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -33,45 +32,37 @@ export default function LoginPage() {
     <section className="min-h-screen flex">
       {/* Left Panel - Desktop Only */}
       <div className="hidden lg:flex lg:w-1/2 bg-navy relative overflow-hidden items-center justify-center">
-        {/* Decorative blur circles */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-beige/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-32 right-16 w-56 h-56 bg-beige-light/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/3 w-40 h-40 bg-beige/5 rounded-full blur-2xl" />
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 right-10 w-16 h-16 rounded-full bg-beige/10 blur-[30px] animate-float" />
-        <div className="absolute bottom-40 left-16 w-12 h-12 rounded-full bg-beige-light/15 blur-[20px] animate-float-slow" />
-        <div className="absolute top-1/3 right-1/3 w-10 h-10 rounded-full bg-beige/8 blur-[25px] animate-float" />
 
         <div className="relative z-10 px-16 max-w-lg">
-          <ScrollReveal direction="left">
+          <div>
             <div className="mb-8">
               <h1 className="text-4xl font-bold text-white mb-2">마음으로</h1>
-              <div className="h-1 w-16 bg-gradient-to-r from-beige to-beige-light rounded-full" />
+              <div className="h-1 w-16 bg-beige rounded-full" />
             </div>
             <p className="text-white/80 text-xl font-medium leading-relaxed mb-4">
               합리적이고 편리한<br />노인돌봄 용품 전문점
             </p>
-            <p className="text-white/40 text-sm leading-relaxed">
+            <p className="text-white/85 text-sm leading-relaxed">
               마음으로는 어르신들의 편안한 일상을 위해<br />
               정성을 담아 최고의 제품을 제공합니다.
             </p>
-          </ScrollReveal>
+          </div>
         </div>
       </div>
 
       {/* Right Panel - Form */}
-      <div className="w-full lg:w-1/2 bg-warm-white flex items-center justify-center px-4 sm:px-6 py-20 lg:py-0">
+      <div className="w-full lg:w-1/2 bg-aloe flex items-center justify-center px-4 sm:px-6 py-20 lg:py-0">
         <div className="w-full max-w-md">
-          <ScrollReveal direction="up">
-            <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-card">
+          <div>
+            <div className="bg-white rounded-xl p-8 sm:p-10 shadow-line">
               {/* Gold accent line */}
               <div className="flex justify-center mb-8">
-                <div className="h-1 w-16 bg-gradient-to-r from-beige to-beige-light rounded-full" />
+                <div className="h-1 w-16 bg-beige rounded-full" />
               </div>
 
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-navy mb-2">로그인</h2>
-                <p className="text-navy/40 text-sm">마음으로 회원 서비스를 이용하세요.</p>
+                <p className="text-ink-mute text-sm">마음으로 회원 서비스를 이용하세요.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -110,7 +101,7 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-navy/30 hover:text-navy/60 transition-colors p-1"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-mute hover:text-ink-soft transition-colors p-1"
                       aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
                     >
                       {showPassword ? (
@@ -143,15 +134,15 @@ export default function LoginPage() {
                 </button>
               </form>
               <div className="mt-6 text-center">
-                <p className="text-sm text-navy/40">
+                <p className="text-sm text-ink-mute">
                   아직 회원이 아니신가요?{' '}
-                  <Link href="/register" className="text-beige font-semibold hover:text-navy transition-colors">
+                  <Link href="/register" className="text-beige-deep font-semibold hover:text-navy transition-colors">
                     회원가입
                   </Link>
                 </p>
               </div>
             </div>
-          </ScrollReveal>
+          </div>
         </div>
       </div>
     </section>

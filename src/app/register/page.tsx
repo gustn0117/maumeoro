@@ -4,7 +4,6 @@ import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
-import ScrollReveal from '@/components/ScrollReveal'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -34,71 +33,63 @@ export default function RegisterPage() {
     <section className="min-h-screen flex">
       {/* Left Panel - Desktop Only */}
       <div className="hidden lg:flex lg:w-1/2 bg-navy relative overflow-hidden items-center justify-center">
-        {/* Decorative blur circles */}
-        <div className="absolute top-16 right-12 w-64 h-64 bg-beige/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-24 left-20 w-72 h-72 bg-beige-light/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 right-1/4 w-36 h-36 bg-beige/5 rounded-full blur-2xl" />
-        {/* Floating decorative elements */}
-        <div className="absolute top-24 right-14 w-16 h-16 rounded-full bg-beige/10 blur-[30px] animate-float" />
-        <div className="absolute bottom-36 left-12 w-12 h-12 rounded-full bg-beige-light/15 blur-[20px] animate-float-slow" />
-        <div className="absolute top-2/3 right-1/3 w-10 h-10 rounded-full bg-beige/8 blur-[25px] animate-float" />
 
         <div className="relative z-10 px-16 max-w-lg">
-          <ScrollReveal direction="left">
+          <div>
             <div className="mb-8">
               <h1 className="text-4xl font-bold text-white mb-2">마음으로</h1>
-              <div className="h-1 w-16 bg-gradient-to-r from-beige to-beige-light rounded-full" />
+              <div className="h-1 w-16 bg-beige rounded-full" />
             </div>
             <p className="text-white/80 text-xl font-medium leading-relaxed mb-2">
               함께하세요
             </p>
-            <p className="text-white/50 text-base leading-relaxed mb-6">
+            <p className="text-white/85 text-base leading-relaxed mb-6">
               마음으로의 회원이 되어<br />
               편리한 서비스를 이용하세요.
             </p>
             <div className="space-y-4 mt-8">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-beige/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-beige-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span className="text-white/60 text-sm">맞춤 제품 추천</span>
+                <span className="text-white/85 text-sm">맞춤 제품 추천</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-beige/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-beige-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span className="text-white/60 text-sm">간편한 주문 관리</span>
+                <span className="text-white/85 text-sm">간편한 주문 관리</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-beige/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-beige" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-beige-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span className="text-white/60 text-sm">회원 전용 혜택</span>
+                <span className="text-white/85 text-sm">회원 전용 혜택</span>
               </div>
             </div>
-          </ScrollReveal>
+          </div>
         </div>
       </div>
 
       {/* Right Panel - Form */}
-      <div className="w-full lg:w-1/2 bg-warm-white flex items-center justify-center px-4 sm:px-6 py-20 lg:py-0">
+      <div className="w-full lg:w-1/2 bg-aloe flex items-center justify-center px-4 sm:px-6 py-20 lg:py-0">
         <div className="w-full max-w-md">
-          <ScrollReveal direction="up">
-            <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-card">
+          <div>
+            <div className="bg-white rounded-xl p-8 sm:p-10 shadow-line">
               {/* Gold accent line */}
               <div className="flex justify-center mb-8">
-                <div className="h-1 w-16 bg-gradient-to-r from-beige to-beige-light rounded-full" />
+                <div className="h-1 w-16 bg-beige rounded-full" />
               </div>
 
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-navy mb-2">회원가입</h2>
-                <p className="text-navy/40 text-sm">마음으로의 회원이 되어 편리한 서비스를 이용하세요.</p>
+                <p className="text-ink-mute text-sm">마음으로의 회원이 되어 편리한 서비스를 이용하세요.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -111,7 +102,7 @@ export default function RegisterPage() {
                   </div>
                 )}
                 <div>
-                  <label htmlFor="name" className="form-label">이름 <span className="text-red-400">*</span></label>
+                  <label htmlFor="name" className="form-label">이름 <span className="text-red-700">*</span></label>
                   <input
                     type="text"
                     id="name"
@@ -124,7 +115,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="form-label">이메일 <span className="text-red-400">*</span></label>
+                  <label htmlFor="email" className="form-label">이메일 <span className="text-red-700">*</span></label>
                   <input
                     type="email"
                     id="email"
@@ -137,7 +128,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="form-label">연락처 <span className="text-red-400">*</span></label>
+                  <label htmlFor="phone" className="form-label">연락처 <span className="text-red-700">*</span></label>
                   <input
                     type="tel"
                     id="phone"
@@ -150,7 +141,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="form-label">비밀번호 <span className="text-red-400">*</span></label>
+                  <label htmlFor="password" className="form-label">비밀번호 <span className="text-red-700">*</span></label>
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
@@ -165,7 +156,7 @@ export default function RegisterPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-navy/30 hover:text-navy/60 transition-colors p-1"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-mute hover:text-ink-soft transition-colors p-1"
                       aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
                     >
                       {showPassword ? (
@@ -182,7 +173,7 @@ export default function RegisterPage() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="passwordConfirm" className="form-label">비밀번호 확인 <span className="text-red-400">*</span></label>
+                  <label htmlFor="passwordConfirm" className="form-label">비밀번호 확인 <span className="text-red-700">*</span></label>
                   <div className="relative">
                     <input
                       type={showPasswordConfirm ? 'text' : 'password'}
@@ -197,7 +188,7 @@ export default function RegisterPage() {
                     <button
                       type="button"
                       onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-navy/30 hover:text-navy/60 transition-colors p-1"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-mute hover:text-ink-soft transition-colors p-1"
                       aria-label={showPasswordConfirm ? '비밀번호 숨기기' : '비밀번호 보기'}
                     >
                       {showPasswordConfirm ? (
@@ -230,15 +221,15 @@ export default function RegisterPage() {
                 </button>
               </form>
               <div className="mt-6 text-center">
-                <p className="text-sm text-navy/40">
+                <p className="text-sm text-ink-mute">
                   이미 회원이신가요?{' '}
-                  <Link href="/login" className="text-beige font-semibold hover:text-navy transition-colors">
+                  <Link href="/login" className="text-beige-deep font-semibold hover:text-navy transition-colors">
                     로그인
                   </Link>
                 </p>
               </div>
             </div>
-          </ScrollReveal>
+          </div>
         </div>
       </div>
     </section>

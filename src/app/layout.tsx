@@ -23,6 +23,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
+      <head>
+        {/* globals.css 안의 @import는 빌드 후 파일 중간에 놓여 브라우저가 무시하므로 여기서 불러온다 */}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
       <body className="min-h-screen flex flex-col overflow-x-hidden">
         <AuthProvider>
           <CartProvider>
