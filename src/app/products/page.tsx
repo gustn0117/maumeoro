@@ -18,9 +18,10 @@ interface Product {
 
 const categories = [
   { value: 'all', label: '전체' },
-  { value: 'bath', label: '목욕·세정' },
   { value: 'hygiene', label: '배뇨·위생' },
+  { value: 'bath', label: '목욕·세정' },
   { value: 'disinfect', label: '소독·감염관리' },
+  { value: 'material', label: '원료' },
 ]
 
 export default function ProductsPage() {
@@ -63,7 +64,7 @@ export default function ProductsPage() {
       {/* Hero */}
       <PageHeader
         title="제품소개"
-        description="유럽에서 검증된 프리미엄 목욕·세정용품을 합리적인 가격으로 만나보세요."
+        description="세계에서 검증된 프리미엄 제품들을 합리적인 가격으로 만나보세요."
       />
 
       {/* Category Filter */}

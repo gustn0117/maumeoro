@@ -1,9 +1,11 @@
 import Link from 'next/link'
+import { PHONE, FAX, BUSINESS_HOURS, ADDRESS } from '@/lib/contact'
 
 const quickLinks = [
   { href: '/about', label: '회사소개' },
   { href: '/products', label: '제품소개' },
   { href: '/catalog', label: '자료요청' },
+  { href: '/counsel', label: '상담예약' },
   { href: '/news', label: '공지사항' },
   { href: '/faq', label: 'FAQ' },
   { href: '/inquiry', label: '1:1 문의' },
@@ -23,11 +25,11 @@ export default function Footer() {
             <Link href="/catalog" className="btn-accent">
               카탈로그 요청
             </Link>
-            <a href="tel:010-6667-2314" className="btn-ghost-light">
+            <a href={`tel:${PHONE}`} className="btn-ghost-light">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              010-6667-2314
+              {PHONE}
             </a>
           </div>
         </div>
@@ -44,7 +46,7 @@ export default function Footer() {
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-beige ml-0.5 mb-2.5" />
               </p>
               <p className="text-white/80 text-sm leading-7 max-w-sm">
-                합리적이고 편리한 노인돌봄 용품 전문점.<br />
+                합리적이고 편리한 돌봄 용품 전문점.<br />
                 노인 및 장애인 돌봄 보호자를 위한<br />
                 고품질 용품을 합리적인 가격으로 공급합니다.
               </p>
@@ -69,12 +71,13 @@ export default function Footer() {
               <h2 className="text-white font-semibold mb-3 text-sm">연락처</h2>
               <ul className="space-y-2 text-sm text-white/80">
                 <li>
-                  <a href="tel:010-6667-2314" className="text-xl font-extrabold text-white hover:text-beige-light transition-colors">
-                    010-6667-2314
+                  <a href={`tel:${PHONE}`} className="text-xl font-extrabold text-white hover:text-beige-light transition-colors">
+                    {PHONE}
                   </a>
                 </li>
-                <li>평일 09:00 ~ 18:00 / 주말 및 공휴일 ~ 13:00</li>
-                <li>서울특별시 관악구 장군봉54길 201호</li>
+                <li>팩스 {FAX}</li>
+                <li>{BUSINESS_HOURS}</li>
+                <li>{ADDRESS}</li>
                 <li>사업자등록번호 119-19-65629</li>
               </ul>
             </div>

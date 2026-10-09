@@ -21,6 +21,7 @@ const categoryLabels: Record<string, string> = {
   bath: '목욕·세정',
   hygiene: '배뇨·위생',
   disinfect: '소독·감염관리',
+  material: '원료',
 }
 
 const emptyForm: Omit<Product, 'id' | 'createdAt'> = {
@@ -316,6 +317,7 @@ export default function AdminProductsPage() {
                         <option value="bath">목욕·세정</option>
                         <option value="hygiene">배뇨·위생</option>
                         <option value="disinfect">소독·감염관리</option>
+                        <option value="material">원료</option>
                       </select>
                     </div>
                     <div>

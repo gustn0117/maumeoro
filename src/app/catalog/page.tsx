@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import PageHeader from '@/components/PageHeader'
+import { PHONE, FAX } from '@/lib/contact'
 
 export default function CatalogPage() {
   const [formData, setFormData] = useState({
@@ -112,6 +113,7 @@ export default function CatalogPage() {
                           <option value="bath">목욕·세정용품</option>
                           <option value="hygiene">배뇨·위생용품</option>
                           <option value="disinfect">소독·감염관리용품</option>
+                          <option value="material">식품·화장품 원료</option>
                           <option value="all">전체 카탈로그</option>
                         </select>
                       </div>
@@ -151,7 +153,8 @@ export default function CatalogPage() {
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-navy">전화 문의</p>
-                        <a href="tel:010-6667-2314" className="text-beige-deep font-bold text-lg hover:underline">010-6667-2314</a>
+                        <a href={`tel:${PHONE}`} className="text-beige-deep font-bold text-lg hover:underline">{PHONE}</a>
+                        <p className="text-ink-soft text-sm">팩스 {FAX}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
@@ -238,7 +241,7 @@ export default function CatalogPage() {
                     전화로 바로 상담받으실 수 있습니다. 제품에 대한 궁금한 점, 주문 관련 문의 등 편하게 연락주세요.
                   </p>
                   <a
-                    href="tel:010-6667-2314"
+                    href={`tel:${PHONE}`}
                     className="block text-center bg-beige text-navy px-6 py-3 rounded-full font-bold hover:bg-beige-light transition-colors"
                   >
                     전화하기

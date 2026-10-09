@@ -124,7 +124,7 @@ export default function ProductDetailPage() {
     )
   }
 
-  const categoryMap: Record<string, string> = { bath: '목욕·세정용품', hygiene: '배뇨·위생용품', disinfect: '소독·감염관리용품' }
+  const categoryMap: Record<string, string> = { bath: '목욕·세정용품', hygiene: '배뇨·위생용품', disinfect: '소독·감염관리용품', material: '원료' }
   const categoryName = categoryMap[product.category] || product.category
 
   return (

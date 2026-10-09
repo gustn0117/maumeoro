@@ -40,7 +40,7 @@ export default function LoginPage() {
               <div className="h-1 w-16 bg-beige rounded-full" />
             </div>
             <p className="text-white/80 text-xl font-medium leading-relaxed mb-4">
-              합리적이고 편리한<br />노인돌봄 용품 전문점
+              합리적이고 편리한<br />돌봄 용품 전문점
             </p>
             <p className="text-white/85 text-sm leading-relaxed">
               마음으로는 어르신들의 편안한 일상을 위해<br />

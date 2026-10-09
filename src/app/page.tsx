@@ -1,10 +1,9 @@
 import Link from 'next/link'
 import { getProducts, getNews, Product, NewsItem } from '@/lib/data'
+import { PHONE, FAX, BUSINESS_HOURS } from '@/lib/contact'
 
 // 제품·소식을 요청 시점에 DB에서 읽는다 (빌드 시점에 고정되지 않도록)
 export const dynamic = 'force-dynamic'
-
-const PHONE = '010-6667-2314'
 
 const strengths = [
   { label: '검증된 품질', sub: 'CE 인증 제품' },
@@ -14,9 +13,10 @@ const strengths = [
 ]
 
 const categories = [
-  { value: 'bath', label: '목욕·세정', description: '침상 목욕과 세정에 쓰는 용품' },
   { value: 'hygiene', label: '배뇨·위생', description: '배뇨 관리와 위생에 쓰는 용품' },
+  { value: 'bath', label: '목욕·세정', description: '침상 목욕과 세정에 쓰는 용품' },
   { value: 'disinfect', label: '소독·감염관리', description: '시설과 가정의 소독, 감염 예방 용품' },
+  { value: 'material', label: '원료', description: '식품, 화장품 원료' },
 ]
 
 const categoryLabels: Record<string, string> = Object.fromEntries(
@@ -60,7 +60,7 @@ export default async function HomePage() {
       <section className="bg-aloe">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           <div className="lg:col-span-6">
-            <p className="font-semibold text-beige-deep animate-rise-in">노인돌봄 용품 전문점</p>
+            <p className="font-semibold text-beige-deep animate-rise-in">의료용품 전문점</p>
             <h1
               className="mt-3 text-[2.5rem] sm:text-5xl lg:text-[3.5rem] font-extrabold text-navy leading-[1.18] tracking-tight animate-rise-in"
               style={{ animationDelay: '80ms' }}
@@ -73,7 +73,7 @@ export default async function HomePage() {
               className="mt-6 text-lg sm:text-xl sm:leading-8 text-ink-soft max-w-xl animate-rise-in"
               style={{ animationDelay: '160ms' }}
             >
-              부모님을 돌보는 모든 분들께, 진심을 담은 제품으로 함께합니다.
+              돌봄이 필요한 모든 분들께, 진심을 담은 제품으로 함께합니다.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 animate-rise-in" style={{ animationDelay: '240ms' }}>
               <Link href="/products" className="btn-primary">제품 보기</Link>
@@ -87,7 +87,7 @@ export default async function HomePage() {
               <a href={`tel:${PHONE}`} className="text-3xl font-extrabold text-navy hover:text-beige-deep transition-colors">
                 {PHONE}
               </a>
-              <span className="text-sm text-ink-soft">평일 09:00 ~ 18:00 / 주말 및 공휴일 ~ 13:00</span>
+              <span className="w-full text-sm text-ink-soft">{BUSINESS_HOURS} · 팩스 {FAX}</span>
             </div>
           </div>
           <div className="lg:col-span-6">
@@ -118,7 +118,7 @@ export default async function HomePage() {
       <section className="py-14 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">어떤 용품을 찾으세요?</h2>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
             {categories.map((c) => (
               <Link
                 key={c.value}

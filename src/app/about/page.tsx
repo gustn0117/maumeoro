@@ -1,4 +1,5 @@
 import PageHeader from '@/components/PageHeader'
+import { PHONE, FAX, ADDRESS } from '@/lib/contact'
 
 const values = [
   {
@@ -26,14 +27,28 @@ const stats = [
   { number: '98%', label: '고객 만족도', suffix: '' },
 ]
 
+// 인사말의 세 가지 핵심 약속
+const greetingPromises = [
+  {
+    title: '삶의 자립을 돕는 돌봄 솔루션',
+    description: '제약 없이 자유롭고 편안한 일상을 누릴 수 있도록 검증된 고품질 Care-Product를 공급합니다.',
+  },
+  {
+    title: '신뢰 기반의 원료 공급',
+    description: '엄격한 품질 관리를 거친 화장품 및 제약 원료를 통해 뷰티·바이오 산업 전반에 안전하고 혁신적인 가치를 제공합니다.',
+  },
+  {
+    title: '지속 가능한 상생과 성장',
+    description: '파트너사와 함께 성장하며, 사회적 책임을 다하는 리딩 기업으로 도약하겠습니다.',
+  },
+]
+
 const companyInfo = [
   { label: '상호명', value: '마음으로 (MAUMEORO)' },
   { label: '사업자등록번호', value: '119-19-65629' },
   { label: '업태 / 종목', value: '도소매업 / 의료기기판매업 외' },
-  { label: '주소', value: '서울특별시 관악구 장군봉54길 201호' },
+  { label: '주소', value: ADDRESS },
 ]
-
-const PHONE = '010-6667-2314'
 
 export default function AboutPage() {
   return (
@@ -43,8 +58,47 @@ export default function AboutPage() {
         description="부모님을 돌보는 모든 분들께 합리적인 비용과 신뢰할 수 있는 품질의 제품으로 함께합니다."
       />
 
+      {/* 인사말 */}
+      <section className="py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-semibold text-beige-deep">인사말</h2>
+          <p className="mt-3 text-3xl md:text-4xl font-bold text-navy leading-snug md:leading-snug tracking-tight">
+            사람을 향한 기술,
+            <br className="hidden sm:block" /> 건강한 삶을 위한 바이오 솔루션
+            <br className="hidden sm:block" /> <span className="whitespace-nowrap">(주)마음으로입니다.</span>
+          </p>
+
+          <div className="mt-10 space-y-5 text-lg leading-8 text-ink-soft max-w-3xl">
+            <p>
+              안녕하십니까? <span className="whitespace-nowrap">(주)마음으로에</span> 따뜻한 관심과 신뢰를 보내주시는 고객 여러분께 깊은 감사를 드립니다.
+            </p>
+            <p>
+              <span className="whitespace-nowrap">(주)마음으로는</span> 삶의 질을 높이는 돌봄용품 사업과 더불어, 피부와 건강의 근본을 다지는 화장품 및 제약 원료
+              분야를 아우르며 한 단계 진화된 라이프 케어 솔루션을 제안합니다.
+            </p>
+            <p>저희는 끊임없는 열정과 까다로운 원료 선별을 통해 세 가지 핵심 약속을 실천합니다.</p>
+          </div>
+
+          <dl className="mt-8 max-w-4xl rounded-xl shadow-line divide-y divide-navy/10">
+            {greetingPromises.map((promise) => (
+              <div key={promise.title} className="flex flex-col md:flex-row gap-1 md:gap-6 px-5 sm:px-6 py-5">
+                <dt className="text-lg font-bold text-navy md:w-64 flex-shrink-0">{promise.title}</dt>
+                <dd className="text-ink-soft">{promise.description}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-8 space-y-5 text-lg leading-8 text-ink-soft max-w-3xl">
+            <p>
+              진정성 있는 기술과 마음으로 더 나은 내일을 만들어가는 <span className="whitespace-nowrap">(주)마음으로의</span> 앞날에 따뜻한 응원을 부탁드립니다.
+            </p>
+            <p className="font-bold text-navy">감사합니다.</p>
+          </div>
+        </div>
+      </section>
+
       {/* Stats */}
-      <section className="border-b border-navy/10">
+      <section className="border-y border-navy/10">
         <dl className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col-reverse">
@@ -134,6 +188,10 @@ export default function AboutPage() {
                   </a>
                 </dd>
               </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4">
+                <dt className="text-sm font-semibold text-ink-soft sm:w-36 flex-shrink-0">팩스</dt>
+                <dd className="font-medium text-navy">{FAX}</dd>
+              </div>
             </dl>
           </div>
 
@@ -149,8 +207,7 @@ export default function AboutPage() {
 
             <div className="rounded-xl shadow-line p-6">
               <h3 className="font-bold text-navy">찾아오시는 길</h3>
-              <p className="mt-1 text-ink-soft">서울특별시 관악구 장군봉54길 201호</p>
-              <p className="mt-1 text-sm text-ink-soft">관악역 5번 출구에서 도보 10분</p>
+              <p className="mt-1 text-ink-soft">{ADDRESS}</p>
             </div>
           </div>
         </div>

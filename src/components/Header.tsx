@@ -5,16 +5,23 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
+import { PHONE, FAX } from '@/lib/contact'
 
 const navItems = [
-  { href: '/about', label: '회사소개' },
-  { href: '/products', label: '제품소개' },
-  { href: '/news', label: '공지사항' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/catalog', label: '자료요청' },
+  { href: '/about', label: '회사소개', sub: 'company' },
+  { href: '/products', label: '제품소개', sub: 'products' },
+  { href: '/catalog', label: '자료요청', sub: 'catalog' },
+  { href: '/counsel', label: '상담예약', sub: 'counsel' },
 ]
 
-const PHONE = '010-6667-2314'
+// '고객지원' 아래에 묶이는 페이지
+const supportItems = [
+  { href: '/news', label: '공지사항' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/inquiry', label: '1:1 문의' },
+]
+
+const navItemClass = 'relative flex flex-col items-center justify-center h-full px-2.5 lg:px-4 xl:px-5 transition-colors duration-200'
 
 function CartIcon() {
   return (
@@ -24,8 +31,19 @@ function CartIcon() {
   )
 }
 
+function NavLabel({ label, sub, active }: { label: string; sub: string; active: boolean }) {
+  return (
+    <>
+      <span className={`font-semibold leading-tight ${active ? 'text-navy' : 'text-ink-soft group-hover:text-navy'}`}>{label}</span>
+      <span className="text-[12px] leading-tight text-ink-mute">{sub}</span>
+      {active && <span className="absolute bottom-0 left-2.5 right-2.5 lg:left-4 lg:right-4 xl:left-5 xl:right-5 h-[3px] bg-beige" />}
+    </>
+  )
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isSupportOpen, setIsSupportOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { totalItems } = useCart()
   const { user, isLoggedIn, logout } = useAuth()
@@ -37,10 +55,15 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const isActive = (href: string) => {
-    if (href === '/') return pathname === '/'
-    return pathname.startsWith(href)
-  }
+  // 페이지를 옮기면 열려 있던 메뉴를 닫는다
+  useEffect(() => {
+    setIsMenuOpen(false)
+    setIsSupportOpen(false)
+  }, [pathname])
+
+  const isActive = (href: string) => pathname.startsWith(href)
+  const closeMenu = () => setIsMenuOpen(false)
+  const supportActive = supportItems.some((item) => isActive(item.href))
 
   const cartLabel = totalItems > 0 ? `장바구니, ${totalItems}개 담김` : '장바구니'
   const cartBadge = totalItems > 0 && (
@@ -56,11 +79,12 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[70px]">
           {/* Logo */}
-          <Link href="/" className="flex items-center min-h-[44px]" aria-label="마음으로 홈">
-            <span className="text-2xl font-extrabold text-navy tracking-tight">
+          <Link href="/" className="flex flex-col justify-center min-h-[44px]" aria-label="마음으로 홈">
+            <span className="text-2xl leading-none font-extrabold text-navy tracking-tight">
               마음으로
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-beige ml-0.5 mb-2.5" />
             </span>
+            <span className="mt-1 text-[13px] leading-none font-bold text-navy">maumeoro</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -72,28 +96,75 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`relative flex items-center h-full px-3.5 lg:px-5 font-semibold transition-colors duration-200 ${
-                    active ? 'text-navy' : 'text-ink-soft hover:text-navy'
-                  }`}
+                  className={`group ${navItemClass}`}
                 >
-                  {item.label}
-                  {active && <span className="absolute bottom-0 left-3.5 right-3.5 lg:left-5 lg:right-5 h-[3px] bg-beige" />}
+                  <NavLabel label={item.label} sub={item.sub} active={active} />
                 </Link>
               )
             })}
+
+            {/* 고객지원: 공지사항 · FAQ · 1:1 문의 */}
+            <div
+              className="relative h-full"
+              onMouseEnter={() => setIsSupportOpen(true)}
+              onMouseLeave={() => setIsSupportOpen(false)}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget)) setIsSupportOpen(false)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setIsSupportOpen(false)
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setIsSupportOpen(true)}
+                aria-expanded={isSupportOpen}
+                aria-controls="support-menu"
+                className={`group ${navItemClass}`}
+              >
+                <NavLabel label="고객지원" sub="support" active={supportActive} />
+              </button>
+              {isSupportOpen && (
+                <ul
+                  id="support-menu"
+                  className="absolute top-full left-1/2 -translate-x-1/2 min-w-[160px] py-2 bg-white rounded-b-lg shadow-raised"
+                >
+                  {supportItems.map((item) => {
+                    const active = isActive(item.href)
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          aria-current={active ? 'page' : undefined}
+                          className={`flex items-center min-h-[44px] px-5 font-semibold whitespace-nowrap transition-colors ${
+                            active ? 'text-navy bg-aloe' : 'text-ink-soft hover:text-navy hover:bg-aloe'
+                          }`}
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </div>
           </nav>
 
           {/* Desktop right */}
           <div className="hidden md:flex items-center gap-1">
-            <a
-              href={`tel:${PHONE}`}
-              className="hidden lg:flex items-center gap-2 min-h-[44px] px-3 font-bold text-navy hover:text-beige-deep transition-colors"
-            >
-              <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              {PHONE}
-            </a>
+            <div className="hidden lg:block px-3 text-right">
+              <a
+                href={`tel:${PHONE}`}
+                className="block font-bold leading-tight text-navy hover:text-beige-deep transition-colors"
+              >
+                <span className="mr-1.5 text-sm font-semibold text-ink-soft">전화</span>
+                {PHONE}
+              </a>
+              <p className="text-sm leading-tight text-ink-soft">
+                <span className="mr-1.5 font-semibold">팩스</span>
+                {FAX}
+              </p>
+            </div>
             <Link
               href="/cart"
               aria-label={cartLabel}
@@ -147,7 +218,7 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <nav id="mobile-menu" className="md:hidden border-t border-navy/10 bg-white" aria-label="주 메뉴">
+        <nav id="mobile-menu" className="md:hidden border-t border-navy/10 bg-white max-h-[calc(100vh-70px)] overflow-y-auto" aria-label="주 메뉴">
           <div className="max-w-7xl mx-auto px-4 py-3">
             {navItems.map((item) => {
               const active = isActive(item.href)
@@ -155,39 +226,63 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                   aria-current={active ? 'page' : undefined}
-                  className={`flex items-center min-h-[52px] px-4 rounded-lg text-lg font-semibold transition-colors ${
+                  className={`flex items-center justify-between min-h-[52px] px-4 rounded-lg text-lg font-semibold transition-colors ${
                     active ? 'bg-aloe text-navy' : 'text-navy hover:bg-aloe'
+                  }`}
+                >
+                  {item.label}
+                  <span className="text-sm font-medium text-ink-mute">{item.sub}</span>
+                </Link>
+              )
+            })}
+
+            <p className="flex items-center justify-between min-h-[52px] px-4 text-lg font-semibold text-navy">
+              고객지원
+              <span className="text-sm font-medium text-ink-mute">support</span>
+            </p>
+            {supportItems.map((item) => {
+              const active = isActive(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMenu}
+                  aria-current={active ? 'page' : undefined}
+                  className={`flex items-center min-h-[48px] ml-4 px-4 rounded-lg font-semibold transition-colors ${
+                    active ? 'bg-aloe text-navy' : 'text-ink-soft hover:bg-aloe hover:text-navy'
                   }`}
                 >
                   {item.label}
                 </Link>
               )
             })}
+
             <div className="border-t border-navy/10 mt-2 pt-2">
               {isLoggedIn ? (
                 <>
-                  <Link href="/mypage" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between min-h-[52px] px-4 rounded-lg text-lg font-semibold text-navy hover:bg-aloe transition-colors">
+                  <Link href="/mypage" onClick={closeMenu} className="flex items-center justify-between min-h-[52px] px-4 rounded-lg text-lg font-semibold text-navy hover:bg-aloe transition-colors">
                     마이페이지
                     <span className="text-sm font-medium text-ink-soft">{user?.name}님</span>
                   </Link>
-                  <Link href="/inquiry" onClick={() => setIsMenuOpen(false)} className="flex items-center min-h-[52px] px-4 rounded-lg text-lg font-semibold text-navy hover:bg-aloe transition-colors">
-                    1:1 문의
-                  </Link>
-                  <button onClick={() => { logout(); setIsMenuOpen(false) }} className="w-full flex items-center min-h-[52px] px-4 rounded-lg text-lg font-semibold text-ink-soft hover:text-red-700 hover:bg-red-50 transition-colors">
+                  <button onClick={() => { logout(); closeMenu() }} className="w-full flex items-center min-h-[52px] px-4 rounded-lg text-lg font-semibold text-ink-soft hover:text-red-700 hover:bg-red-50 transition-colors">
                     로그아웃
                   </button>
                 </>
               ) : (
-                <Link href="/login" onClick={() => setIsMenuOpen(false)} className="flex items-center min-h-[52px] px-4 rounded-lg text-lg font-semibold text-navy hover:bg-aloe transition-colors">
+                <Link href="/login" onClick={closeMenu} className="flex items-center min-h-[52px] px-4 rounded-lg text-lg font-semibold text-navy hover:bg-aloe transition-colors">
                   로그인
                 </Link>
               )}
               <a href={`tel:${PHONE}`} className="mt-2 flex items-center justify-between min-h-[56px] px-4 rounded-lg bg-navy text-white">
-                <span className="text-sm text-white/85">상담 전화</span>
+                <span className="text-sm text-white/85">전화</span>
                 <span className="text-xl font-extrabold">{PHONE}</span>
               </a>
+              <p className="flex items-center justify-between min-h-[44px] px-4 text-ink-soft">
+                <span className="text-sm">팩스</span>
+                <span className="font-semibold">{FAX}</span>
+              </p>
             </div>
           </div>
         </nav>
