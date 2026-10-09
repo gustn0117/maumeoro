@@ -41,10 +41,13 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
             {/* Company Info */}
             <div className="lg:col-span-5">
-              <p className="text-2xl font-extrabold mb-4">
-                마음으로
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-beige ml-0.5 mb-2.5" />
-              </p>
+              <img
+                src="/images/logo-on-dark.png"
+                alt="마음으로 MAEUMEURO"
+                width={561}
+                height={184}
+                className="h-[46px] w-auto mb-5"
+              />
               <p className="text-white/80 text-sm leading-7 max-w-sm">
                 합리적이고 편리한 돌봄 용품 전문점.<br />
                 노인 및 장애인 돌봄 보호자를 위한<br />

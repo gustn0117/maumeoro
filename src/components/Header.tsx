@@ -79,12 +79,14 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[70px]">
           {/* Logo */}
-          <Link href="/" className="flex flex-col justify-center min-h-[44px]" aria-label="마음으로 홈">
-            <span className="text-2xl leading-none font-extrabold text-navy tracking-tight">
-              마음으로
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-beige ml-0.5 mb-2.5" />
-            </span>
-            <span className="mt-1 text-[13px] leading-none font-bold text-navy">maumeoro</span>
+          <Link href="/" className="flex items-center min-h-[44px]" aria-label="마음으로 홈">
+            <img
+              src="/images/logo.png"
+              alt=""
+              width={561}
+              height={184}
+              className="h-10 lg:h-[46px] w-auto"
+            />
           </Link>
 
           {/* Desktop Nav */}
