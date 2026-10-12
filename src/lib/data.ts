@@ -37,6 +37,9 @@ export interface Order {
     company: string
     address: string
     message: string
+    // 무통장입금 정보 (결제방법을 넣기 전에 들어온 신청에는 없다)
+    paymentMethod?: 'bank_transfer'
+    depositor?: string
   }
   status: 'pending' | 'confirmed' | 'processing' | 'completed' | 'cancelled'
   totalAmount: number

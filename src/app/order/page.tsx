@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
 import PageHeader from '@/components/PageHeader'
+import BankAccount from '@/components/BankAccount'
+import { LAST_ORDER_KEY } from '@/lib/payment'
 
 interface Product {
   id: string
@@ -64,7 +66,7 @@ function OrderContent() {
 
   const [directProduct, setDirectProduct] = useState<Product | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '', email: '', company: '', address: '', message: '' })
+  const [form, setForm] = useState({ name: '', phone: '', email: '', company: '', address: '', message: '', depositor: '' })
   const [isDirect, setIsDirect] = useState(false)
 
   useEffect(() => {
@@ -115,13 +117,19 @@ function OrderContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: orderItems,
-          customer: form,
+          customer: { ...form, paymentMethod: 'bank_transfer' },
           totalAmount,
           userId: user?.id || undefined,
         }),
       })
       if (!res.ok) throw new Error('신청 요청에 실패했습니다.')
       const data = await res.json()
+      try {
+        // 완료 화면에서 입금자명과 금액을 다시 보여주기 위해 넘겨 둔다
+        sessionStorage.setItem(LAST_ORDER_KEY, JSON.stringify({ id: data.orderId, depositor: form.depositor, totalAmount }))
+      } catch {
+        // 저장소를 쓸 수 없으면 완료 화면에는 계좌 안내만 나온다
+      }
       if (!isDirect) clearCart()
       router.push(`/order/complete?id=${data.orderId}`)
     } catch (err) {
@@ -150,7 +158,7 @@ function OrderContent() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Form Section */}
             <div className="lg:col-span-2">
-              <div>
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="bg-white rounded-xl p-6 sm:p-8 shadow-line">
                   <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
                     <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -158,7 +166,7 @@ function OrderContent() {
                     </svg>
                     신청자 정보
                   </h2>
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="space-y-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
                         <label htmlFor="name" className="form-label">이름 <span className="text-red-700">*</span></label>
@@ -187,32 +195,61 @@ function OrderContent() {
                       <label htmlFor="message" className="form-label">요청사항</label>
                       <textarea id="message" name="message" rows={4} value={form.message} onChange={handleChange} placeholder="추가 요청사항이 있으시면 입력해 주세요" className="form-textarea" />
                     </div>
-                    <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
-                      <button type="submit" disabled={isSubmitting} className="w-full sm:w-auto btn-primary inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                        {isSubmitting ? (
-                          <>
-                            <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                            </svg>
-                            신청 처리 중...
-                          </>
-                        ) : (
-                          <>
-                            신청하기
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </>
-                        )}
-                      </button>
-                      <Link href={isDirect ? '/products' : '/cart'} className="text-ink-mute hover:text-navy text-sm font-medium transition-colors">
-                        {isDirect ? '제품 목록으로' : '장바구니로 돌아가기'}
-                      </Link>
-                    </div>
-                  </form>
+                  </div>
                 </div>
-              </div>
+
+                {/* 결제방법 */}
+                <div className="bg-white rounded-xl p-6 sm:p-8 shadow-line">
+                  <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
+                    <svg className="w-5 h-5 text-beige-deep" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    결제방법 선택
+                  </h2>
+                  <div className="space-y-5">
+                    <fieldset>
+                      <legend className="form-label">결제방법</legend>
+                      <label className="inline-flex items-center gap-2.5 min-h-[44px] cursor-pointer">
+                        <input type="radio" name="paymentMethod" value="bank_transfer" checked readOnly className="w-5 h-5 accent-navy" />
+                        <span className="font-medium text-navy">무통장입금</span>
+                      </label>
+                    </fieldset>
+                    <div>
+                      <p className="form-label">입금 계좌</p>
+                      <BankAccount />
+                    </div>
+                    <div>
+                      <label htmlFor="depositor" className="form-label">입금자명 <span className="text-red-700">*</span></label>
+                      <input type="text" id="depositor" name="depositor" required value={form.depositor} onChange={handleChange} placeholder="입금하시는 분의 이름" className="form-input sm:max-w-xs" />
+                      <p className="mt-1.5 text-sm text-ink-soft">신청자와 입금자가 다르면 실제로 입금하시는 분의 이름을 적어 주세요.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <button type="submit" disabled={isSubmitting} className="w-full sm:w-auto btn-primary inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                    {isSubmitting ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        신청 처리 중...
+                      </>
+                    ) : (
+                      <>
+                        신청하기
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </>
+                    )}
+                  </button>
+                  <Link href={isDirect ? '/products' : '/cart'} className="text-ink-mute hover:text-navy text-sm font-medium transition-colors">
+                    {isDirect ? '제품 목록으로' : '장바구니로 돌아가기'}
+                  </Link>
+                </div>
+              </form>
             </div>
 
             {/* Order Summary */}

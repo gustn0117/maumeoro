@@ -21,6 +21,7 @@ interface Order {
     company: string
     address: string
     message: string
+    depositor?: string
   }
   status: 'pending' | 'confirmed' | 'processing' | 'completed' | 'cancelled'
   totalAmount: number
@@ -195,6 +196,7 @@ export default function AdminOrdersPage() {
                                     <div className="flex"><span className="w-16 text-navy/30 flex-shrink-0">이메일</span><span className="text-navy">{order.customer.email || '-'}</span></div>
                                     <div className="flex"><span className="w-16 text-navy/30 flex-shrink-0">기관</span><span className="text-navy">{order.customer.company || '-'}</span></div>
                                     <div className="flex"><span className="w-16 text-navy/30 flex-shrink-0">주소</span><span className="text-navy">{order.customer.address || '-'}</span></div>
+                                    <div className="flex"><span className="w-16 text-navy/30 flex-shrink-0">입금자</span><span className="text-navy">{order.customer.depositor || '-'}</span></div>
                                     {order.customer.message && (
                                       <div className="flex"><span className="w-16 text-navy/30 flex-shrink-0">메모</span><span className="text-navy">{order.customer.message}</span></div>
                                     )}

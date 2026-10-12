@@ -2,8 +2,10 @@
 
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Suspense } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import PageHeader from '@/components/PageHeader'
+import BankAccount from '@/components/BankAccount'
+import { LAST_ORDER_KEY } from '@/lib/payment'
 
 function StepIndicatorComplete() {
   const steps = [
@@ -38,6 +40,17 @@ function StepIndicatorComplete() {
 function OrderCompleteContent() {
   const searchParams = useSearchParams()
   const orderId = searchParams.get('id')
+  const [summary, setSummary] = useState<{ depositor: string; totalAmount: number } | null>(null)
+
+  // 신청 화면에서 넘겨 둔 입금자명·금액을 읽는다 (이 신청의 것일 때만)
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(LAST_ORDER_KEY) || 'null')
+      if (saved && saved.id === orderId) setSummary(saved)
+    } catch {
+      // 저장된 값이 없거나 읽을 수 없으면 계좌 안내만 보여준다
+    }
+  }, [orderId])
 
   return (
     <>
@@ -85,6 +98,27 @@ function OrderCompleteContent() {
               <p className="text-ink-mute text-sm mb-10 max-w-md mx-auto">
                 신청 내역을 확인하신 후 영업일 기준 1~2일 이내에 연락드리겠습니다. 문의사항이 있으시면 언제든 연락해 주세요.
               </p>
+
+              {/* 무통장입금 안내 */}
+              <div className="text-left rounded-xl border border-navy/15 p-5 sm:p-6 mb-10">
+                <h3 className="text-lg font-bold text-navy">무통장입금 안내</h3>
+                <p className="mt-1 text-sm text-ink-soft">담당자가 확인하여 최종 견적과 결제 안내를 드립니다.</p>
+                <div className="mt-4">
+                  <BankAccount />
+                </div>
+                {summary && (
+                  <dl className="mt-4 grid grid-cols-2 gap-4">
+                    <div>
+                      <dt className="text-sm font-semibold text-ink-soft">입금자명</dt>
+                      <dd className="mt-0.5 font-medium text-navy">{summary.depositor}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-semibold text-ink-soft">신청 금액</dt>
+                      <dd className="mt-0.5 font-medium text-navy">{summary.totalAmount.toLocaleString('ko-KR')}원</dd>
+                    </div>
+                  </dl>
+                )}
+              </div>
 
               {/* Info Items with Icons */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
