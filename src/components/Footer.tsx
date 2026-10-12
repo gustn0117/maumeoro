@@ -42,10 +42,10 @@ export default function Footer() {
             {/* Company Info */}
             <div className="lg:col-span-5">
               <img
-                src="/images/logo-on-dark.png"
-                alt="마음으로 MAEUMEURO"
-                width={561}
-                height={184}
+                src="/images/logo-maumeoro-on-dark.png"
+                alt="마음으로 MAUMEORO"
+                width={638}
+                height={195}
                 className="h-[46px] w-auto mb-5"
               />
               <p className="text-white/80 text-sm leading-7 max-w-sm">

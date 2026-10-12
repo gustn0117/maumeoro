@@ -81,10 +81,10 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center min-h-[44px]" aria-label="마음으로 홈">
             <img
-              src="/images/logo.png"
+              src="/images/logo-maumeoro.png"
               alt=""
-              width={561}
-              height={184}
+              width={638}
+              height={195}
               className="h-10 lg:h-[46px] w-auto"
             />
           </Link>
