@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
-import { PHONE, FAX, BUSINESS_HOURS, ADDRESS } from '@/lib/contact'
+import { PHONE, FAX, EMAIL, BUSINESS_HOURS, ADDRESS } from '@/lib/contact'
 
 export const metadata: Metadata = {
   title: '상담예약 | 마음으로 MAUMEORO',
@@ -39,6 +39,14 @@ export default function CounselPage() {
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4">
                 <dt className="text-sm font-semibold text-ink-soft sm:w-24 flex-shrink-0">팩스</dt>
                 <dd className="font-medium text-navy">{FAX}</dd>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4">
+                <dt className="text-sm font-semibold text-ink-soft sm:w-24 flex-shrink-0">이메일</dt>
+                <dd>
+                  <a href={`mailto:${EMAIL}`} className="font-medium text-navy underline underline-offset-4 hover:text-beige-deep transition-colors">
+                    {EMAIL}
+                  </a>
+                </dd>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4">
                 <dt className="text-sm font-semibold text-ink-soft sm:w-24 flex-shrink-0">방문 상담</dt>

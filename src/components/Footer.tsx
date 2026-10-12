@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { PHONE, FAX, BUSINESS_HOURS, ADDRESS } from '@/lib/contact'
+import { PHONE, FAX, EMAIL, BUSINESS_HOURS, ADDRESS } from '@/lib/contact'
 
 const quickLinks = [
   { href: '/about', label: '회사소개' },
@@ -79,6 +79,12 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>팩스 {FAX}</li>
+                <li>
+                  이메일{' '}
+                  <a href={`mailto:${EMAIL}`} className="underline underline-offset-2 hover:text-white transition-colors">
+                    {EMAIL}
+                  </a>
+                </li>
                 <li>{BUSINESS_HOURS}</li>
                 <li>{ADDRESS}</li>
                 <li>사업자등록번호 119-19-65629</li>

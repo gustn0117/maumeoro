@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import PageHeader from '@/components/PageHeader'
-import { PHONE, FAX } from '@/lib/contact'
+import { PHONE, FAX, EMAIL } from '@/lib/contact'
 
 export default function CatalogPage() {
   const [formData, setFormData] = useState({
@@ -155,6 +155,12 @@ export default function CatalogPage() {
                         <p className="text-sm font-semibold text-navy">전화 문의</p>
                         <a href={`tel:${PHONE}`} className="text-beige-deep font-bold text-lg hover:underline">{PHONE}</a>
                         <p className="text-ink-soft text-sm">팩스 {FAX}</p>
+                        <p className="text-ink-soft text-sm">
+                          이메일{' '}
+                          <a href={`mailto:${EMAIL}`} className="underline underline-offset-2 hover:text-navy transition-colors">
+                            {EMAIL}
+                          </a>
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">

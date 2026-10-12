@@ -1,5 +1,5 @@
 import PageHeader from '@/components/PageHeader'
-import { PHONE, FAX, ADDRESS } from '@/lib/contact'
+import { PHONE, FAX, EMAIL, ADDRESS } from '@/lib/contact'
 
 const values = [
   {
@@ -55,7 +55,7 @@ export default function AboutPage() {
     <>
       <PageHeader
         title="회사소개"
-        description="부모님을 돌보는 모든 분들께 합리적인 비용과 신뢰할 수 있는 품질의 제품으로 함께합니다."
+        description="돌봄이 필요한 모든 분들께 합리적인 비용과 신뢰할 수 있는 품질의 제품으로 함께합니다."
       />
 
       {/* 인사말 */}
@@ -65,15 +65,15 @@ export default function AboutPage() {
           <p className="mt-3 text-3xl md:text-4xl font-bold text-navy leading-snug md:leading-snug tracking-tight">
             사람을 향한 기술,
             <br className="hidden sm:block" /> 건강한 삶을 위한 바이오 솔루션
-            <br className="hidden sm:block" /> <span className="whitespace-nowrap">(주)마음으로입니다.</span>
+            <br className="hidden sm:block" /> 마음으로입니다.
           </p>
 
           <div className="mt-10 space-y-5 text-lg leading-8 text-ink-soft max-w-3xl">
             <p>
-              안녕하십니까? <span className="whitespace-nowrap">(주)마음으로에</span> 따뜻한 관심과 신뢰를 보내주시는 고객 여러분께 깊은 감사를 드립니다.
+              안녕하십니까? 마음으로에 따뜻한 관심과 신뢰를 보내주시는 고객 여러분께 깊은 감사를 드립니다.
             </p>
             <p>
-              <span className="whitespace-nowrap">(주)마음으로는</span> 삶의 질을 높이는 돌봄용품 사업과 더불어, 피부와 건강의 근본을 다지는 화장품 및 제약 원료
+              마음으로는 삶의 질을 높이는 돌봄용품 사업과 더불어, 피부와 건강의 근본을 다지는 화장품 및 제약 원료
               분야를 아우르며 한 단계 진화된 라이프 케어 솔루션을 제안합니다.
             </p>
             <p>저희는 끊임없는 열정과 까다로운 원료 선별을 통해 세 가지 핵심 약속을 실천합니다.</p>
@@ -90,7 +90,7 @@ export default function AboutPage() {
 
           <div className="mt-8 space-y-5 text-lg leading-8 text-ink-soft max-w-3xl">
             <p>
-              진정성 있는 기술과 마음으로 더 나은 내일을 만들어가는 <span className="whitespace-nowrap">(주)마음으로의</span> 앞날에 따뜻한 응원을 부탁드립니다.
+              진정성 있는 기술과 마음으로 더 나은 내일을 만들어가는 마음으로의 앞날에 따뜻한 응원을 부탁드립니다.
             </p>
             <p className="font-bold text-navy">감사합니다.</p>
           </div>
@@ -123,7 +123,7 @@ export default function AboutPage() {
             </h2>
             <div className="mt-8 space-y-5 text-lg leading-8 text-ink-soft max-w-2xl">
               <p>
-                부모님을 돌보는 일은 마음만으로 되는 일이 아니라는 걸 우리는 알고 있습니다.
+                돌봄이 필요한 일은 마음만으로 되는 일이 아니라는 걸 우리는 알고 있습니다.
                 시간도 필요하고, 체력도 필요하고, 무엇보다 꾸준함이 필요합니다.
               </p>
               <p>그래서 돌봄은 늘 현실과 마주합니다.</p>
@@ -191,6 +191,14 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4">
                 <dt className="text-sm font-semibold text-ink-soft sm:w-36 flex-shrink-0">팩스</dt>
                 <dd className="font-medium text-navy">{FAX}</dd>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4">
+                <dt className="text-sm font-semibold text-ink-soft sm:w-36 flex-shrink-0">이메일</dt>
+                <dd>
+                  <a href={`mailto:${EMAIL}`} className="font-medium text-navy underline underline-offset-4 hover:text-beige-deep transition-colors">
+                    {EMAIL}
+                  </a>
+                </dd>
               </div>
             </dl>
           </div>

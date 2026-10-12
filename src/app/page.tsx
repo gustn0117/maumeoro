@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getProducts, getNews, Product, NewsItem } from '@/lib/data'
-import { PHONE, FAX, BUSINESS_HOURS } from '@/lib/contact'
+import { PHONE, FAX, EMAIL, BUSINESS_HOURS } from '@/lib/contact'
 
 // 제품·소식을 요청 시점에 DB에서 읽는다 (빌드 시점에 고정되지 않도록)
 export const dynamic = 'force-dynamic'
@@ -87,7 +87,16 @@ export default async function HomePage() {
               <a href={`tel:${PHONE}`} className="text-3xl font-extrabold text-navy hover:text-beige-deep transition-colors">
                 {PHONE}
               </a>
-              <span className="w-full text-sm text-ink-soft">{BUSINESS_HOURS} · 팩스 {FAX}</span>
+              <span className="w-full flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-ink-soft">
+                <span>{BUSINESS_HOURS}</span>
+                <span>팩스 {FAX}</span>
+                <span>
+                  이메일{' '}
+                  <a href={`mailto:${EMAIL}`} className="underline underline-offset-2 hover:text-navy transition-colors">
+                    {EMAIL}
+                  </a>
+                </span>
+              </span>
             </div>
           </div>
           <div className="lg:col-span-6">
