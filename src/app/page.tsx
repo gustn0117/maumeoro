@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import HeroBanner from '@/components/HeroBanner'
+import { productCategories } from '@/lib/categories'
 import { getProducts, getNews, Product, NewsItem } from '@/lib/data'
-import { PHONE, FAX, EMAIL, BUSINESS_HOURS } from '@/lib/contact'
 
 // 제품·소식을 요청 시점에 DB에서 읽는다 (빌드 시점에 고정되지 않도록)
 export const dynamic = 'force-dynamic'
@@ -12,15 +13,8 @@ const strengths = [
   { label: '빠른 배송', sub: '전국 당일출고' },
 ]
 
-const categories = [
-  { value: 'hygiene', label: '배뇨·위생', english: 'Urinary Care & Hygiene', description: '배뇨 관리와 위생에 쓰는 용품' },
-  { value: 'bath', label: '목욕·세정', english: 'Bathing & Cleansing', description: '침상 목욕과 세정에 쓰는 용품' },
-  { value: 'disinfect', label: '소독·감염관리', english: 'Disinfection & Infection', description: '시설과 가정의 소독, 감염 예방 용품' },
-  { value: 'material', label: '원료', english: 'Food, cosmetic ingredients', description: '식품, 화장품 원료' },
-]
-
 const categoryLabels: Record<string, string> = Object.fromEntries(
-  categories.map((c) => [c.value, c.label])
+  productCategories.map((c) => [c.value, c.label])
 )
 
 const newsCategoryLabels: Record<string, string> = {
@@ -56,60 +50,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-aloe">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          <div className="lg:col-span-6">
-            <p className="font-semibold text-beige-deep animate-rise-in">의료용품 전문점</p>
-            <h1
-              className="mt-3 text-[2.5rem] sm:text-5xl lg:text-[3.5rem] font-extrabold text-navy leading-[1.18] tracking-tight animate-rise-in"
-              style={{ animationDelay: '80ms' }}
-            >
-              마음을 담아,
-              <br />
-              돌봄을 더하다
-            </h1>
-            <p
-              className="mt-6 text-lg sm:text-xl sm:leading-8 text-ink-soft max-w-xl animate-rise-in"
-              style={{ animationDelay: '160ms' }}
-            >
-              돌봄이 필요한 모든 분들께, 진심을 담은 제품으로 함께합니다.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 animate-rise-in" style={{ animationDelay: '240ms' }}>
-              <Link href="/products" className="btn-primary">제품 보기</Link>
-              <Link href="/catalog" className="btn-outline">카탈로그 요청</Link>
-            </div>
-            <div
-              className="mt-8 pt-6 border-t border-navy/15 flex flex-wrap items-baseline gap-x-4 gap-y-1 animate-rise-in"
-              style={{ animationDelay: '320ms' }}
-            >
-              <span className="font-semibold text-navy">상담 전화</span>
-              <a href={`tel:${PHONE}`} className="text-3xl font-extrabold text-navy hover:text-beige-deep transition-colors">
-                {PHONE}
-              </a>
-              <span className="w-full flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-ink-soft">
-                <span>{BUSINESS_HOURS}</span>
-                <span>팩스 {FAX}</span>
-                <span>
-                  이메일{' '}
-                  <a href={`mailto:${EMAIL}`} className="underline underline-offset-2 hover:text-navy transition-colors">
-                    {EMAIL}
-                  </a>
-                </span>
-              </span>
-            </div>
-          </div>
-          <div className="lg:col-span-6">
-            <div className="relative aspect-[16/10] lg:aspect-[4/3] rounded-2xl overflow-hidden bg-navy/5">
-              <img
-                src="/images/hero-3.jpg"
-                alt="보호자가 어르신의 손을 두 손으로 감싸 쥔 모습"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroBanner />
 
       {/* 강점 */}
       <section className="border-b border-navy/10">
@@ -128,7 +69,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">어떤 용품을 찾으세요?</h2>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
-            {categories.map((c) => (
+            {productCategories.map((c) => (
               <Link
                 key={c.value}
                 href={`/products?category=${c.value}`}

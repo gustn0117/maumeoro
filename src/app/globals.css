@@ -137,16 +137,6 @@ body {
   animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* 첫 화면에서 한 번만 쓰는 등장 효과.
-   기본 상태는 보이는 상태로 두어, 애니메이션이 돌지 않는 환경에서도 내용이 사라지지 않게 한다. */
-@keyframes riseIn {
-  from { opacity: 0; transform: translateY(12px); }
-}
-
-.animate-rise-in {
-  animation: riseIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
 /* Checkmark success */
 @keyframes checkDraw {
   0% { stroke-dashoffset: 24; }
