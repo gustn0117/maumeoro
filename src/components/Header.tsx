@@ -154,19 +154,17 @@ export default function Header() {
 
           {/* Desktop right */}
           <div className="hidden md:flex items-center gap-1">
-            <div className="hidden lg:block px-3 text-right">
-              <a
-                href={`tel:${PHONE}`}
-                className="block font-bold leading-tight text-navy hover:text-beige-deep transition-colors"
-              >
-                <span className="mr-1.5 text-sm font-semibold text-ink-soft">전화</span>
-                {PHONE}
-              </a>
-              <p className="text-sm leading-tight text-ink-soft">
-                <span className="mr-1.5 font-semibold">팩스</span>
-                {FAX}
-              </p>
-            </div>
+            {/* 두 줄의 이름표와 번호가 같은 위치에서 시작하도록 2열 격자로 맞춘다 */}
+            <dl className="hidden lg:grid grid-cols-[auto_auto] items-baseline gap-x-2 px-3 leading-tight tabular-nums">
+              <dt className="text-sm font-semibold text-ink-soft">전화</dt>
+              <dd>
+                <a href={`tel:${PHONE}`} className="font-bold text-navy hover:text-beige-deep transition-colors">
+                  {PHONE}
+                </a>
+              </dd>
+              <dt className="text-sm font-semibold text-ink-soft">팩스</dt>
+              <dd className="font-medium text-ink-soft">{FAX}</dd>
+            </dl>
             <Link
               href="/cart"
               aria-label={cartLabel}
