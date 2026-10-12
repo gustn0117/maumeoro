@@ -13,10 +13,10 @@ const strengths = [
 ]
 
 const categories = [
-  { value: 'hygiene', label: '배뇨·위생', description: '배뇨 관리와 위생에 쓰는 용품' },
-  { value: 'bath', label: '목욕·세정', description: '침상 목욕과 세정에 쓰는 용품' },
-  { value: 'disinfect', label: '소독·감염관리', description: '시설과 가정의 소독, 감염 예방 용품' },
-  { value: 'material', label: '원료', description: '식품, 화장품 원료' },
+  { value: 'hygiene', label: '배뇨·위생', english: 'Urinary Care & Hygiene', description: '배뇨 관리와 위생에 쓰는 용품' },
+  { value: 'bath', label: '목욕·세정', english: 'Bathing & Cleansing', description: '침상 목욕과 세정에 쓰는 용품' },
+  { value: 'disinfect', label: '소독·감염관리', english: 'Disinfection & Infection', description: '시설과 가정의 소독, 감염 예방 용품' },
+  { value: 'material', label: '원료', english: 'Food, cosmetic ingredients', description: '식품, 화장품 원료' },
 ]
 
 const categoryLabels: Record<string, string> = Object.fromEntries(
@@ -127,7 +127,7 @@ export default async function HomePage() {
       <section className="py-14 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">어떤 용품을 찾으세요?</h2>
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
             {categories.map((c) => (
               <Link
                 key={c.value}
@@ -135,7 +135,8 @@ export default async function HomePage() {
                 className="group flex flex-col justify-between min-h-[168px] rounded-xl bg-white shadow-line p-6 lg:p-7 card-hover"
               >
                 <div>
-                  <h3 className="text-2xl font-bold text-navy">{c.label}</h3>
+                  <p lang="en" className="text-xs font-semibold text-beige-deep">{c.english}</p>
+                  <h3 className="mt-1 text-2xl font-bold text-navy">{c.label}</h3>
                   <p className="mt-2 text-ink-soft">{c.description}</p>
                 </div>
                 <span className="mt-6 inline-flex items-center gap-1 font-semibold text-beige-deep group-hover:text-navy transition-colors">
