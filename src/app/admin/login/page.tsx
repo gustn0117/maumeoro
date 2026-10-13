@@ -15,7 +15,7 @@ export default function AdminLoginPage() {
     setError('')
 
     setTimeout(() => {
-      if (password === 'maumeoro2025') {
+      if (password === '1234') {
         sessionStorage.setItem('admin_authenticated', 'true')
         router.push('/admin')
       } else {

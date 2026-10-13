@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import HeroBanner from '@/components/HeroBanner'
 import { productCategories } from '@/lib/categories'
-import { getProducts, getNews, Product, NewsItem } from '@/lib/data'
+import { getProducts, getNews, getSiteImages, Product, NewsItem } from '@/lib/data'
+import type { SiteImages } from '@/lib/siteImages'
 
 // 제품·소식을 요청 시점에 DB에서 읽는다 (빌드 시점에 고정되지 않도록)
 export const dynamic = 'force-dynamic'
@@ -33,24 +34,26 @@ function Chevron() {
   )
 }
 
-async function loadHomeData(): Promise<{ products: Product[]; news: NewsItem[] }> {
-  // DB가 응답하지 않아도 홈 화면은 떠야 하므로 각각 빈 목록으로 대체한다
-  const [products, news] = await Promise.all([
+async function loadHomeData(): Promise<{ products: Product[]; news: NewsItem[]; images: SiteImages }> {
+  // DB가 응답하지 않아도 홈 화면은 떠야 하므로 각각 빈 값으로 대체한다
+  const [products, news, images] = await Promise.all([
     getProducts().catch(() => [] as Product[]),
     getNews().catch(() => [] as NewsItem[]),
+    getSiteImages().catch(() => ({}) as SiteImages),
   ])
   return {
+    images,
     products: [...products].sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')).slice(0, 4),
     news: news.filter((n) => n.published).slice(0, 4),
   }
 }
 
 export default async function HomePage() {
-  const { products, news } = await loadHomeData()
+  const { products, news, images } = await loadHomeData()
 
   return (
     <>
-      <HeroBanner />
+      <HeroBanner images={images} />
 
       {/* 강점 */}
       <section className="border-b border-navy/10">

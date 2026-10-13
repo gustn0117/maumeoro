@@ -599,3 +599,26 @@ export async function saveFAQ(faq: FAQItem[]): Promise<void> {
   const { error } = await supabase.from('faq').upsert(rows, { onConflict: 'id' })
   if (error) throw error
 }
+
+// ============================
+// Site Images (관리자에서 교체하는 섹션 이미지)
+// ============================
+
+// 자리 이름 -> 올린 이미지 주소. 올린 적이 없는 자리는 들어 있지 않다.
+export async function getSiteImages(): Promise<Record<string, string>> {
+  const { data, error } = await supabase.from('site_images').select('slot, url')
+  if (error) throw error
+  return Object.fromEntries((data || []).map((row) => [row.slot, row.url]))
+}
+
+export async function setSiteImage(slot: string, url: string): Promise<void> {
+  const { error } = await supabase
+    .from('site_images')
+    .upsert({ slot, url, updated_at: new Date().toISOString() })
+  if (error) throw error
+}
+
+export async function clearSiteImage(slot: string): Promise<void> {
+  const { error } = await supabase.from('site_images').delete().eq('slot', slot)
+  if (error) throw error
+}

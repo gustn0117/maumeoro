@@ -1,5 +1,10 @@
 import PageHeader from '@/components/PageHeader'
 import { PHONE, FAX, EMAIL, ADDRESS } from '@/lib/contact'
+import { getSiteImages } from '@/lib/data'
+import type { SiteImages } from '@/lib/siteImages'
+
+// 관리자에서 바꾼 사진이 바로 보이도록 요청 시점에 읽는다
+export const dynamic = 'force-dynamic'
 
 const values = [
   {
@@ -50,7 +55,10 @@ const companyInfo = [
   { label: '주소', value: ADDRESS },
 ]
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  // DB가 응답하지 않아도 화면은 떠야 하므로 기본 사진으로 대체한다
+  const images = await getSiteImages().catch(() => ({}) as SiteImages)
+
   return (
     <>
       <PageHeader
@@ -141,8 +149,8 @@ export default function AboutPage() {
           <div className="lg:col-span-5">
             <div className="relative aspect-[4/3] lg:aspect-[4/5] rounded-2xl overflow-hidden bg-aloe">
               <img
-                src="/images/about-care.jpg"
-                alt="돌봄 상담 기록을 정리하는 모습"
+                src={images['about-story'] ?? '/images/about-care.jpg'}
+                alt={images['about-story'] ? '' : '돌봄 상담 기록을 정리하는 모습'}
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>

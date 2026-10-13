@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { productCategories } from '@/lib/categories'
 import { PHONE, FAX, EMAIL, BUSINESS_HOURS } from '@/lib/contact'
+import type { SiteImages } from '@/lib/siteImages'
 
 interface Banner {
   key: string
@@ -25,30 +26,40 @@ const PANEL_TONES = ['bg-navy text-white', 'bg-beige-light text-navy', 'bg-navy-
 const inTwoLines = (text: string) =>
   text.includes(' & ') ? text.replace(' & ', '\n& ') : text.replace(/ (?=\S+$)/, '\n')
 
-// 배너 목록. 배너용 이미지·문구를 받으면 이 목록만 바꾸면 된다.
-// (카테고리 4장은 사진을 받기 전까지 글자 판으로 채워 둔 임시 구성)
-const banners: Banner[] = [
-  {
-    key: 'main',
-    label: '의료용품 전문점',
-    title: '마음을 담아,\n돌봄을 더하다',
-    description: '돌봄이 필요한 모든 분들께, 진심을 담은 제품으로 함께합니다.',
-    href: '/products',
-    image: { src: '/images/hero-3.jpg', alt: '보호자가 어르신의 손을 두 손으로 감싸 쥔 모습' },
-  },
-  ...productCategories.map((c, i) => ({
-    key: c.value,
-    label: '제품 카테고리',
-    title: c.label,
-    description: c.description,
-    href: `/products?category=${c.value}`,
-    panel: { text: inTwoLines(c.english), tone: PANEL_TONES[i % PANEL_TONES.length] },
-  })),
-]
+// 배너 목록. 그림은 관리자 '이미지 관리'에서 올린 것을 쓴다 (자리 이름: banner-main, banner-<카테고리>).
+// 올린 그림이 없으면 1번은 기본 사진, 카테고리 4장은 영문 이름을 크게 쓴 글자 판이 나온다.
+function buildBanners(images: SiteImages): Banner[] {
+  return [
+    {
+      key: 'main',
+      label: '의료용품 전문점',
+      title: '마음을 담아,\n돌봄을 더하다',
+      description: '돌봄이 필요한 모든 분들께, 진심을 담은 제품으로 함께합니다.',
+      href: '/products',
+      image: images['banner-main']
+        ? { src: images['banner-main'], alt: '' }
+        : { src: '/images/hero-3.jpg', alt: '보호자가 어르신의 손을 두 손으로 감싸 쥔 모습' },
+    },
+    ...productCategories.map((c, i) => {
+      const uploaded = images[`banner-${c.value}`]
+      return {
+        key: c.value,
+        label: '제품 카테고리',
+        title: c.label,
+        description: c.description,
+        href: `/products?category=${c.value}`,
+        ...(uploaded
+          ? { image: { src: uploaded, alt: '' } }
+          : { panel: { text: inTwoLines(c.english), tone: PANEL_TONES[i % PANEL_TONES.length] } }),
+      }
+    }),
+  ]
+}
 
 const controlClass = 'w-10 h-10 flex items-center justify-center rounded-full text-ink-soft hover:text-navy hover:bg-navy/5 transition-colors'
 
-export default function HeroBanner() {
+export default function HeroBanner({ images = {} }: { images?: SiteImages }) {
+  const banners = buildBanners(images)
   const [index, setIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)     // 멈춤 버튼으로 정한 상태
   const [isEngaged, setIsEngaged] = useState(false)   // 마우스를 올렸거나 키보드 초점이 안에 있는 동안
@@ -83,14 +94,14 @@ export default function HeroBanner() {
   return (
     <section className="bg-aloe" aria-roledescription="carousel" aria-label="주요 배너">
       <div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
         // 터치 화면에서는 손을 뗀 뒤에도 '올려둔' 상태가 남으므로 마우스일 때만 멈춘다
         onPointerEnter={(e) => e.pointerType === 'mouse' && setIsEngaged(true)}
         onPointerLeave={(e) => e.pointerType === 'mouse' && setIsEngaged(false)}
         onFocus={(e) => e.target.matches(':focus-visible') && setIsEngaged(true)}
         onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setIsEngaged(false)}
       >
-        <div className="lg:col-span-6">
+        <div className="lg:col-span-5">
           {/* 글: 모든 배너를 같은 칸에 겹쳐 두어, 넘어갈 때 높이가 흔들리지 않게 한다 */}
           <div className="grid" aria-live={isPaused || isEngaged ? 'polite' : 'off'} {...swipe}>
             {banners.map((b, i) => {
@@ -179,8 +190,8 @@ export default function HeroBanner() {
         </div>
 
         {/* 그림: 모바일에서는 글 위에 온다 */}
-        <div className="lg:col-span-6 order-first lg:order-none">
-          <div className="relative aspect-[16/10] lg:aspect-[4/3] rounded-2xl overflow-hidden bg-navy/5" {...swipe}>
+        <div className="lg:col-span-7 order-first lg:order-none">
+          <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-navy/5" {...swipe}>
             {banners.map((b, i) => (
               <div
                 key={b.key}
