@@ -183,7 +183,7 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4">
                 <dt className="text-sm font-semibold text-ink-soft sm:w-36 flex-shrink-0">전화번호</dt>
                 <dd>
-                  <a href={`tel:${PHONE}`} className="font-medium text-navy underline underline-offset-4 hover:text-beige-deep transition-colors">
+                  <a href={`tel:${PHONE}`} className="font-medium text-navy underline-offset-4 hover:underline hover:text-beige-deep transition-colors">
                     {PHONE}
                   </a>
                 </dd>
@@ -195,7 +195,7 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-5 sm:px-6 py-4">
                 <dt className="text-sm font-semibold text-ink-soft sm:w-36 flex-shrink-0">이메일</dt>
                 <dd>
-                  <a href={`mailto:${EMAIL}`} className="font-medium text-navy underline underline-offset-4 hover:text-beige-deep transition-colors">
+                  <a href={`mailto:${EMAIL}`} className="font-medium text-navy underline-offset-4 hover:underline hover:text-beige-deep transition-colors">
                     {EMAIL}
                   </a>
                 </dd>

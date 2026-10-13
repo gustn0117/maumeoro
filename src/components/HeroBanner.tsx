@@ -170,7 +170,7 @@ export default function HeroBanner() {
               <span>팩스 {FAX}</span>
               <span>
                 이메일{' '}
-                <a href={`mailto:${EMAIL}`} className="underline underline-offset-2 hover:text-navy transition-colors">
+                <a href={`mailto:${EMAIL}`} className="underline-offset-2 hover:underline hover:text-navy transition-colors">
                   {EMAIL}
                 </a>
               </span>

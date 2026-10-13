@@ -157,7 +157,7 @@ export default function CatalogPage() {
                         <p className="text-ink-soft text-sm">팩스 {FAX}</p>
                         <p className="text-ink-soft text-sm">
                           이메일{' '}
-                          <a href={`mailto:${EMAIL}`} className="underline underline-offset-2 hover:text-navy transition-colors">
+                          <a href={`mailto:${EMAIL}`} className="underline-offset-2 hover:underline hover:text-navy transition-colors">
                             {EMAIL}
                           </a>
                         </p>

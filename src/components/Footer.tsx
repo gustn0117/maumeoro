@@ -81,7 +81,7 @@ export default function Footer() {
                 <li>팩스 {FAX}</li>
                 <li>
                   이메일{' '}
-                  <a href={`mailto:${EMAIL}`} className="underline underline-offset-2 hover:text-white transition-colors">
+                  <a href={`mailto:${EMAIL}`} className="underline-offset-2 hover:underline hover:text-white transition-colors">
                     {EMAIL}
                   </a>
                 </li>
