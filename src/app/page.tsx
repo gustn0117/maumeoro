@@ -94,7 +94,7 @@ export default async function HomePage() {
       <section className="bg-navy on-dark">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
           <p className="text-lg font-semibold text-beige-light">돌봄은 늘 현실과 마주합니다.</p>
-          <blockquote className="mt-6 space-y-4 text-[1.625rem] leading-[1.4] sm:text-4xl sm:leading-[1.35] lg:text-[2.75rem] lg:leading-[1.3] font-bold text-white tracking-wide">
+          <blockquote className="mt-6 space-y-4 text-[1.625rem] leading-[1.4] sm:text-[2.125rem] sm:leading-[1.35] lg:text-[2.75rem] lg:leading-[1.3] font-bold text-white tracking-wider">
             <p>&ldquo;좋은 제품을 쓰고 싶지만 부담은 줄이고 싶다.&rdquo;</p>
             <p>&ldquo;편하게 해드리고 싶지만 비용도 생각해야 한다.&rdquo;</p>
           </blockquote>

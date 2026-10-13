@@ -108,7 +108,7 @@ export default function HeroBanner() {
                   }`}
                 >
                   <p className="font-semibold text-beige-deep">{b.label}</p>
-                  <Title className="mt-3 text-[2.5rem] sm:text-5xl lg:text-[3.5rem] font-extrabold text-navy leading-[1.18] tracking-wide whitespace-pre-line">
+                  <Title className="mt-3 text-[2.5rem] sm:text-5xl lg:text-[3.5rem] font-extrabold text-navy leading-[1.18] tracking-wider whitespace-pre-line">
                     {b.title}
                   </Title>
                   <p className="mt-6 text-lg sm:text-xl sm:leading-8 text-ink-soft max-w-xl">{b.description}</p>
